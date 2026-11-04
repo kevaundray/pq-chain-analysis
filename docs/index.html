@@ -1,0 +1,406 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pre-quantum cryptography in Ethereum contracts</title>
+<meta name="description" content="How many Ethereum mainnet contracts rely on ecrecover, elliptic curves, RSA or lattices; whether they can change; and how much value goes through them.">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --bg: #ffffff; --fg: #1a1d21; --muted: #5f6b7a; --border: #e3e7ec; --surface: #f6f8fa;
+  --accent: #3b5bdb; --c1: #3b5bdb; --c2: #e8590c; --c3: #2f9e44; --c4: #ae3ec9; --c5: #f08c00; --c6: #1098ad;
+  --bad: #e03131; --warn: #f08c00; --ok: #2f9e44;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0f1216; --fg: #e6e9ee; --muted: #94a0ae; --border: #262c34; --surface: #161b21;
+    --accent: #748ffc; --c1: #748ffc; --c2: #ff922b; --c3: #51cf66; --c4: #da77f2; --c5: #fcc419; --c6: #3bc9db;
+    --bad: #ff6b6b; --warn: #fcc419; --ok: #51cf66;
+  }
+}
+* { box-sizing: border-box; }
+body { margin: 0; font: 15px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: var(--bg); color: var(--fg); }
+a { color: var(--accent); }
+header { padding: 40px max(24px, calc((100% - 1152px) / 2)) 24px; border-bottom: 1px solid var(--border); }
+header h1 { margin: 0 0 8px; font-size: 28px; }
+header p { margin: 4px 0; color: var(--muted); max-width: 900px; }
+nav { position: sticky; top: 0; z-index: 10; background: var(--bg); border-bottom: 1px solid var(--border); padding: 8px max(24px, calc((100% - 1152px) / 2)); display: flex; gap: 16px; flex-wrap: wrap; font-size: 14px; }
+nav a { text-decoration: none; color: var(--muted); }
+nav a:hover { color: var(--fg); }
+main { max-width: 1200px; margin: 0 auto; padding: 0 24px 80px; }
+section { padding-top: 40px; scroll-margin-top: 40px; }
+h2 { font-size: 21px; margin: 0 0 6px; }
+h3 { font-size: 16px; margin: 20px 0 6px; }
+.lede { color: var(--muted); margin: 0 0 16px; max-width: 900px; }
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; margin-top: 24px; }
+.kpi { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+.kpi .v { font-size: 26px; font-weight: 650; }
+.kpi .l { color: var(--muted); font-size: 13px; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+@media (max-width: 900px) { .grid2 { grid-template-columns: 1fr; } }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px; }
+.chart { position: relative; height: 360px; }
+.chart.tall { height: 480px; }
+.toggle { display: inline-flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin-bottom: 10px; }
+.toggle button { background: transparent; color: var(--muted); border: 0; padding: 6px 12px; cursor: pointer; font: inherit; font-size: 13px; }
+.toggle button.on { background: var(--accent); color: #fff; }
+table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+th, td { padding: 6px 8px; border-bottom: 1px solid var(--border); text-align: left; vertical-align: top; }
+th { color: var(--muted); font-weight: 600; white-space: nowrap; }
+td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.scroll { overflow-x: auto; }
+.heat td.cell { text-align: center; min-width: 150px; border: 1px solid var(--border); }
+.heat td.cell .big { font-size: 17px; font-weight: 650; }
+.heat td.cell .small { font-size: 12px; color: var(--muted); }
+.heat th.row { text-align: left; }
+.pill { display: inline-block; padding: 1px 7px; border-radius: 10px; font-size: 12px; border: 1px solid var(--border); white-space: nowrap; }
+.pill.sole { color: var(--bad); border-color: var(--bad); }
+.pill.key_rotation_only { color: var(--warn); border-color: var(--warn); }
+.pill.alternative_exists, .pill.configurable_verifier { color: var(--ok); border-color: var(--ok); }
+.filters { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
+.filters input, .filters select { background: var(--bg); color: var(--fg); border: 1px solid var(--border); border-radius: 6px; padding: 6px 8px; font: inherit; font-size: 13px; }
+.filters input { min-width: 240px; flex: 1; }
+#explorer th { cursor: pointer; user-select: none; }
+#explorer tr.row { cursor: pointer; }
+#explorer tr.row:hover td { background: var(--surface); }
+#explorer tr.detail td { background: var(--surface); font-size: 13px; }
+#explorer tr.detail dl { display: grid; grid-template-columns: 160px 1fr; gap: 4px 12px; margin: 4px 0; }
+#explorer tr.detail dt { color: var(--muted); }
+#explorer tr.detail dd { margin: 0; word-break: break-word; }
+.mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12.5px; }
+.note { color: var(--muted); font-size: 13px; }
+.cards3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
+footer { border-top: 1px solid var(--border); padding: 24px; color: var(--muted); font-size: 13px; text-align: center; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Pre-quantum cryptography in Ethereum mainnet contracts</h1>
+  <p>If user accounts become post-quantum but the contracts they rely on keep checking ECDSA, elliptic-curve or RSA signatures and proofs, what still depends on pre-quantum cryptography? How many contracts, can they change, do they have an alternative path, and how much value goes through them?</p>
+  <p class="note">Usage window: blocks 22.1M–24.7M (2025-03-22 → 2026-03-18). Contract state and holdings as of 2026-11-03. Full write-up: <a href="https://github.com/kevaundray/pq-chain-analysis/blob/main/REPORT.md">REPORT.md</a> · data and code: <a href="https://github.com/kevaundray/pq-chain-analysis">github.com/kevaundray/pq-chain-analysis</a></p>
+  <div class="kpis" id="kpis"></div>
+</header>
+<nav>
+  <a href="#categories">Categories</a><a href="#who">Accounts vs apps</a><a href="#reliance">Reliance × mutability</a>
+  <a href="#function">What it's for</a><a href="#ordering">Signature ordering</a><a href="#permit">Permit tokens</a>
+  <a href="#rollups">Rollups</a><a href="#lattice">Lattice</a><a href="#explorer-sec">Contract explorer</a>
+  <a href="#replacements">PQ replacements</a><a href="#method">Method</a>
+</nav>
+<main>
+
+<section id="categories">
+  <h2>1 · How many contracts, by category</h2>
+  <p class="lede">A contract counts when it, as the execution context, made a successful call to an elliptic-curve precompile, or to <code>modexp</code> with an elliptic-curve or RSA-size modulus (EC done in software). Log scale.</p>
+  <div class="toggle" id="catToggle"></div>
+  <div class="card"><div class="chart"><canvas id="catChart"></canvas></div></div>
+  <div class="scroll"><table id="catTable"></table></div>
+</section>
+
+<section id="who">
+  <h2>2 · Who calls <code>ecrecover</code>: accounts vs applications</h2>
+  <p class="lede">Most callers are user accounts: EOAs with EIP-7702 delegated code, or contract wallets. Applications are about 6% of callers but carry most of the activity.</p>
+  <div class="grid2">
+    <div class="card"><h3>Callers active in the year</h3><div class="chart"><canvas id="roleCountChart"></canvas></div></div>
+    <div class="card"><h3>Transactions and value by role</h3><div class="toggle" id="roleToggle"></div><div class="chart"><canvas id="roleValueChart"></canvas></div></div>
+  </div>
+  <p class="note" id="ethHeldNote"></p>
+</section>
+
+<section id="reliance">
+  <h2>3 · Reliance × who can change it (346 largest applications)</h2>
+  <p class="lede">Each contract was classified from its verified source or bytecode. <b>Reliance</b>: is the pre-quantum check the only path (sole), can only the keys be rotated (key rotation only), does a non-pre-quantum path exist (alternative exists), or can the verifier be swapped (configurable verifier)? <b>Code</b>: can the contract itself change?</p>
+  <div class="toggle" id="heatToggle"></div>
+  <div class="scroll"><table class="heat" id="heat"></table></div>
+  <div class="cards3" style="margin-top:16px" id="relianceCards"></div>
+</section>
+
+<section id="function">
+  <h2>4 · What the crypto is for, and who signs</h2>
+  <div class="toggle" id="funcToggle"></div>
+  <div class="grid2">
+    <div class="card"><h3>By function</h3><div class="chart tall"><canvas id="funcChart"></canvas></div></div>
+    <div class="card"><h3>By who holds the key</h3><div class="chart tall"><canvas id="signerChart"></canvas></div></div>
+  </div>
+</section>
+
+<section id="ordering">
+  <h2>5 · How user signatures are checked</h2>
+  <p class="lede">For a <b>new</b> PQ account, what matters is whether an ERC-1271 path exists. For a <b>migrated</b> EOA that keeps its address, the risk is any path where the old ECDSA key still works. <a href="https://eips.ethereum.org/EIPS/eip-8151">EIP-8151</a> addresses that by making <code>ecrecover</code> fail for accounts with real code.</p>
+  <div class="grid2">
+    <div class="card"><div class="chart"><canvas id="orderChart"></canvas></div></div>
+    <div id="orderCards" class="cards3" style="grid-template-columns:1fr"></div>
+  </div>
+</section>
+
+<section id="permit">
+  <h2>6 · Token supply behind <code>permit</code></h2>
+  <p class="lede">Market cap of tokens whose <code>permit</code> was used in the year, coloured by whether the permit path has a non-ECDSA option. Immutable ECDSA-only tokens can only be protected at the protocol level (EIP-8151).</p>
+  <div class="card"><div class="chart tall"><canvas id="permitChart"></canvas></div></div>
+</section>
+
+<section id="rollups">
+  <h2>7 · Rollups whose L1 contracts verify pre-quantum proofs</h2>
+  <p class="lede">L2BEAT value secured, by state-validation type. SNARK verifiers on L1 use BN254 pairings; blob rollups also depend on KZG commitments. "Canonical" is value escrowed on L1.</p>
+  <div class="card"><div class="chart"><canvas id="rollupChart"></canvas></div></div>
+</section>
+
+<section id="lattice">
+  <h2>8 · Lattice verifiers on mainnet</h2>
+  <p class="lede">Found by scanning 2.48M unique runtime bytecodes deployed since block 18M for Falcon and ML-DSA NTT tables. Six exist; together they have about 13 calls and dust balances.</p>
+  <div class="scroll"><table id="latticeTable"></table></div>
+</section>
+
+<section id="explorer-sec">
+  <h2>9 · Contract explorer</h2>
+  <p class="lede">The 433 contracts classified individually (346 applications, 87 wallets). Click a row for the admin, evidence and suggested PQ path. Rows marked <i>low</i> confidence are inferred from bytecode.</p>
+  <div class="filters">
+    <input id="q" placeholder="Search protocol, address, evidence…">
+    <select id="fRole"><option value="">Apps + wallets</option><option value="app">Applications</option><option value="acct">Wallets</option></select>
+    <select id="fFunc"><option value="">Any function</option></select>
+    <select id="fRel"><option value="">Any reliance</option></select>
+    <select id="fUpg"><option value="">Any upgradeability</option></select>
+    <select id="fCat"><option value="">Any category</option></select>
+  </div>
+  <div class="note" id="explorerCount"></div>
+  <div class="scroll"><table id="explorer"></table></div>
+</section>
+
+<section id="replacements">
+  <h2>10 · What these contracts want, and PQ replacements</h2>
+  <div class="scroll"><table>
+    <thead><tr><th>What the contract needs</th><th>Today</th><th>PQ replacement</th><th>Cost / maturity</th><th>Who can migrate</th></tr></thead>
+    <tbody>
+      <tr><td><b>User authorizes offline</b>: permit, signed order, meta-tx</td><td><code>ecrecover</code> of the EOA</td><td>Verify through the account: ERC-1271 or ERC-7913 <code>verify(key, hash, sig)</code> against a PQ verifier. Check account code before ECDSA. EIP-8151 for immutable legacy code. Frame-tx batching removes much of the need for <code>permit</code>.</td><td>Falcon-512 ≈0.45–3.9M gas · ML-DSA-44 ≈1.2M (+4.1M key registration) · SPHINCS-variants ≈40–200k. Precompiles (EIP-8051/8052) are drafts.</td><td>Protocols for routers; users route around immutable paths</td></tr>
+      <tr><td><b>Operator authorizes execution</b>: RFQ quote, cosigner, voucher, paymaster</td><td>Single ECDSA key</td><td>PQ verifier or an ERC-1271 signer contract. Signatures grow from 65 B to ≈0.7–17 KB.</td><td>Same verifier costs, paid on every fill</td><td>Operator; scheme change needs new code</td></tr>
+      <tr><td><b>Committee attests</b>: bridges, oracles, DVNs</td><td>m-of-n secp256k1</td><td>Per-signer hash-based signatures, or aggregate into one STARK (leanMultisig-style); ZK light clients</td><td>No production PQ committee found</td><td>Governance upgrade; app-level verifier choice (LayerZero DVNs, Hyperlane ISMs)</td></tr>
+      <tr><td><b>Verify a SNARK</b>: rollups, zkVMs, privacy, identity</td><td>BN254 pairing</td><td>STARK/FRI verifier (Starknet in production), WHIR, or recursion into a PQ proof</td><td>≈1.1–5.6M gas vs ≈300k for Groth16</td><td>Consumer repoints the verifier (89 of 111 curated verifiers)</td></tr>
+      <tr><td><b>Aggregate signatures</b></td><td>BLS on BN254 / BLS12-381</td><td>Hash-based signatures (XMSS) aggregated in a SNARK/STARK</td><td>No EVM verifier yet</td><td>Protocol team</td></tr>
+      <tr><td><b>Open blob commitments</b></td><td>KZG (0x0a)</td><td>Protocol-level PQ data availability ("PQ blobs" on the EF roadmap)</td><td>Roadmap</td><td>L1, then rollups</td></tr>
+      <tr><td><b>Passkeys</b></td><td>P-256 (0x100 / software)</td><td>ML-DSA WebAuthn (IETF draft; shipped by 1Password)</td><td>≈1.2M gas without a precompile</td><td>Wallet vendor</td></tr>
+      <tr><td><b>Randomness / Schnorr</b> via the ecrecover trick</td><td>secp256k1 algebra</td><td>No PQ VRF EVM verifier found; commit-reveal, threshold randomness in a STARK, or RANDAO</td><td>–</td><td>Protocol</td></tr>
+      <tr><td><b>RSA identity</b> (DKIM, JWT, passports)</td><td>RSA via modexp</td><td>Issuers move to PQ first; then ML-DSA/SLH-DSA verification on-chain or in a STARK</td><td>–</td><td>Off-chain issuers</td></tr>
+      <tr><td><b>Account owners</b> (Safe, BitGo, 7702)</td><td>EOA owners</td><td>Safe: ERC-1271 PQ signer contracts as owners. BitGo WalletSimple: immutable, so funds must move. 7702: convert to real code (EIP-8298 / 8141).</td><td>–</td><td>Owners</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="method">
+  <h2>Method and caveats</h2>
+  <ul class="note" style="font-size:14px">
+    <li><b>Detection</b>: every successful precompile call on mainnet from a geth <code>callTracer</code> trace (<a href="https://github.com/CPerezz/precompile-tracer">precompile-tracer</a>). The caller is the execution context: the proxy for proxies, the EOA for 7702 delegations. Contracts that verify ECDSA in pure Solidity, or weren't called in the window, are missed.</li>
+    <li><b>Tx value</b>: the largest single ERC-20/ETH transfer in each transaction, summed over distinct transactions. Estimated from a 1-in-10 block sample of Xatu transfer tables, priced with DefiLlama (99.2% of transfers priced). Groups can overlap. Bridge value is understated, because attestation and transfer usually happen in separate transactions.</li>
+    <li><b>Held</b>: ETH plus the first 50 ERC-20s held now, fetched for the ≈3.9k most important addresses.</li>
+    <li><b>Classification</b>: account vs application and immutable vs upgradeable come from rules for the long tail (selectors, proxy slots, names). The 433 largest contracts were classified by reading verified source or bytecode; 65 are low confidence.</li>
+    <li><b>Lattice</b>: static bytecode scan (Falcon / ML-DSA twiddle and zeta tables), confirmed by hand.</li>
+  </ul>
+</section>
+</main>
+<footer>Data and code: <a href="https://github.com/kevaundray/pq-chain-analysis">kevaundray/pq-chain-analysis</a></footer>
+
+<script>
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const C = () => ({ fg: css('--fg'), muted: css('--muted'), border: css('--border'), series: ['--c1','--c2','--c3','--c4','--c5','--c6'].map(css), bad: css('--bad'), warn: css('--warn'), ok: css('--ok') });
+
+const fmtN = v => v == null ? '–' : v >= 1e9 ? (v/1e9).toFixed(2)+'B' : v >= 1e6 ? (v/1e6).toFixed(2)+'M' : v >= 1e4 ? (v/1e3).toFixed(1)+'k' : Math.round(v).toLocaleString();
+const fmtUSD = v => v == null ? '–' : v >= 1e12 ? '$'+(v/1e12).toFixed(2)+'T' : v >= 1e9 ? '$'+(v/1e9).toFixed(1)+'B' : v >= 1e6 ? '$'+(v/1e6).toFixed(1)+'M' : v >= 1e3 ? '$'+(v/1e3).toFixed(0)+'k' : v >= 1 ? '$'+v.toFixed(0) : '≈$0';
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+const L = {
+  ecrecover: 'ecrecover (secp256k1 ECDSA)', bn254: 'BN254 precompiles', bls12381: 'BLS12-381 precompiles', kzg: 'KZG point evaluation',
+  p256: 'P-256 precompile (0x100)', sw_p256: 'P-256 in software', sw_secp256k1: 'secp256k1 in software', sw_bn254: 'BN254 in software',
+  sw_ed25519: 'ed25519 in software', sw_bls12381: 'BLS12-381 in software', rsa: 'RSA (modexp ≥1024-bit)',
+  sole: 'Sole', key_rotation_only: 'Key rotation only', alternative_exists: 'Alternative exists', configurable_verifier: 'Configurable verifier',
+  immutable: 'Immutable', immutable_logic_configurable_params: 'Immutable code, configurable keys', upgradeable_proxy_admin: 'Upgradeable proxy', owner_controlled_account_upgrade: 'Owner-upgradeable wallet',
+  ecrecover_only: 'ecrecover only', signer_selects_scheme: 'Signer selects scheme', ecrecover_first_then_1271: 'ecrecover first, then ERC-1271', code_check_first: 'Account code checked first', 'n/a': 'n/a',
+  operator_signed_quote_rfq: 'Operator-signed RFQ quote / cosigner', user_auth_intent_order: 'User-signed intent / order', user_auth_permit: 'User permit / Permit2 / EIP-3009',
+  bridge_committee_attestation: 'Bridge / committee attestation', oracle_report_signatures: 'Oracle / keeper reports', other: 'Other / unidentified',
+  paymaster_or_sponsor_signer: 'Paymaster / sponsor signer', operator_signed_claim_mint_or_voucher: 'Signed claim / mint / voucher', snark_proof_verification: 'SNARK proof verification',
+  sequencer_or_relayer_signature: 'Sequencer / relayer signature', blob_kzg_opening: 'Blob KZG opening', account_owner_auth: 'Account owner auth', bls_aggregate_signature: 'BLS aggregate signature',
+  user_auth_metatx_forwarder: 'Meta-tx forwarder', passkey_webauthn: 'Passkey / WebAuthn', randomness_vrf: 'VRF / randomness', rsa_dkim_jwt_identity: 'RSA identity',
+  end_user: 'End user', protocol_operator_single_key: 'Single operator key', committee_multisig_threshold: 'Committee / multisig', prover_proof: 'Proof (prover)', mixed: 'Mixed', unknown: 'Unknown',
+};
+const lbl = k => L[k] ?? k;
+
+function toggle(el, options, onChange, initial = 0) {
+  el.innerHTML = options.map((o, i) => `<button data-i="${i}" class="${i === initial ? 'on' : ''}">${o.label}</button>`).join('');
+  el.querySelectorAll('button').forEach(b => b.onclick = () => {
+    el.querySelectorAll('button').forEach(x => x.classList.remove('on')); b.classList.add('on'); onChange(options[+b.dataset.i]);
+  });
+  onChange(options[initial]);
+}
+
+const charts = {};
+function chart(id, cfg) {
+  if (charts[id]) charts[id].destroy();
+  const c = C();
+  Chart.defaults.color = c.muted; Chart.defaults.borderColor = c.border; Chart.defaults.font.family = getComputedStyle(document.body).fontFamily;
+  charts[id] = new Chart(document.getElementById(id), cfg);
+  return charts[id];
+}
+const METRICS = [
+  { key: 'txs_y1', label: 'Transactions', fmt: fmtN },
+  { key: 'usd_tx_y1', label: 'Tx value', fmt: fmtUSD },
+  { key: 'usd_held_now', label: 'Held now', fmt: fmtUSD },
+  { key: 'contracts', label: 'Contracts', fmt: fmtN },
+];
+
+fetch('data.json').then(r => r.json()).then(D => {
+  const c = C();
+  const any = D.t1_categories.find(r => r.cat === 'ANY pre-quantum');
+  const er = D.t2_roles_mutability.find(r => r.cat === 'ecrecover');
+  const cov = D.curated_coverage;
+  const curated = cov.find(r => r.curated === true || r.curated === 'true' || r.curated === 'True');
+  const total = cov.reduce((s, r) => s + (r.usd_tx_y1 || 0), 0);
+  const chainTx = D.chain_tx_estimate.est_total_txs;
+  document.getElementById('kpis').innerHTML = [
+    [fmtN(any.callers_y1), 'addresses invoked pre-quantum crypto in the year'],
+    [fmtN(any.txs_y1), `transactions (${(100*any.txs_y1/chainTx).toFixed(1)}% of ≈${fmtN(chainTx)} mainnet txs)`],
+    [fmtUSD(any.usd_tx_y1), 'moved in those transactions (largest transfer per tx)'],
+    [fmtN(er.applications), 'applications calling ecrecover (the rest are wallets)'],
+    [String(curated.contracts), `largest applications classified by hand (${Math.round(100*curated.usd_tx_y1/total)}% of app value)`],
+    [String(D.lattice_contracts.length), 'lattice verifiers on mainnet (≈13 calls total)'],
+  ].map(([v, l]) => `<div class="kpi"><div class="v">${v}</div><div class="l">${l}</div></div>`).join('');
+
+  // 1. categories
+  const cats = D.t1_categories.filter(r => r.cat !== 'ANY pre-quantum');
+  const groupColor = g => g?.startsWith('1') ? c.series[0] : g?.startsWith('2') ? c.series[1] : g?.startsWith('3') ? c.series[2] : c.series[3];
+  toggle(document.getElementById('catToggle'), [
+    { key: 'callers_y1', label: 'Contracts active in year', fmt: fmtN }, { key: 'callers_alltime', label: 'Contracts ever', fmt: fmtN },
+    { key: 'txs_y1', label: 'Transactions', fmt: fmtN }, { key: 'usd_tx_y1', label: 'Tx value', fmt: fmtUSD }, { key: 'usd_held_now', label: 'Held now', fmt: fmtUSD },
+  ], m => chart('catChart', {
+    type: 'bar',
+    data: { labels: cats.map(r => lbl(r.cat)), datasets: [{ data: cats.map(r => r[m.key] || null), backgroundColor: cats.map(r => groupColor(r.group)) }] },
+    options: { indexAxis: 'y', maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: x => m.fmt(x.raw) } } },
+               scales: { x: { type: 'logarithmic', ticks: { callback: v => { const e = Math.log10(v); return Number.isInteger(e) ? m.fmt(v) : ''; } } } } },
+  }));
+  document.getElementById('catTable').innerHTML = `<thead><tr><th>Category</th><th>Group</th><th class="n">Ever</th><th class="n">Active in year</th><th class="n">Tx in year</th><th class="n">Tx value</th><th class="n">Held now</th></tr></thead><tbody>` +
+    D.t1_categories.map(r => `<tr${r.cat === 'ANY pre-quantum' ? ' style="font-weight:650"' : ''}><td>${esc(lbl(r.cat))}</td><td>${esc((r.group || '').replace(/^\d\. /, ''))}</td><td class="n">${fmtN(r.callers_alltime)}</td><td class="n">${fmtN(r.callers_y1)}</td><td class="n">${fmtN(r.txs_y1)}</td><td class="n">${fmtUSD(r.usd_tx_y1)}</td><td class="n">${fmtUSD(r.usd_held_now)}</td></tr>`).join('') +
+    `<tr><td>Lattice (Falcon / ML-DSA)</td><td>static scan</td><td class="n">${D.lattice_contracts.length}</td><td class="n">≈13 calls</td><td class="n">–</td><td class="n">–</td><td class="n">dust</td></tr></tbody>`;
+
+  // 2. roles
+  const roleSlices = [
+    ['7702-delegated EOAs', er.acct_7702_eoa, c.series[3]], ['Contract wallets', er.acct_contract, c.series[5]],
+    ['Apps: immutable', er.app_immutable, c.bad], ['Apps: upgradeable proxy', er.app_upgradeable, c.warn],
+    ['Apps: unresolved proxy', er.app_proxy_unresolved, c.series[4]], ['No code now', er.other, c.border],
+  ];
+  chart('roleCountChart', { type: 'doughnut', data: { labels: roleSlices.map(s => s[0]), datasets: [{ data: roleSlices.map(s => s[1]), backgroundColor: roleSlices.map(s => s[2]), borderColor: css('--bg') }] },
+    options: { maintainAspectRatio: false, plugins: { legend: { position: 'right' }, tooltip: { callbacks: { label: x => `${x.label}: ${fmtN(x.raw)}` } } } } });
+  const t3 = D.t3_value_by_role.filter(r => r.catgroup === 'ecrecover' && r.role !== 'no_code_now');
+  const roleName = r => ({ application: 'App', account_contract: 'Wallet', account_7702_eoa: '7702 EOA' }[r.role] + ': ' + r.mutability.replace('_', ' '));
+  toggle(document.getElementById('roleToggle'), METRICS.slice(0, 3), m => chart('roleValueChart', {
+    type: 'bar', data: { labels: t3.map(roleName), datasets: [{ data: t3.map(r => r[m.key]), backgroundColor: t3.map(r => r.role === 'application' ? c.series[1] : r.role === 'account_contract' ? c.series[5] : c.series[3]) }] },
+    options: { indexAxis: 'y', maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: x => m.fmt(x.raw) } } }, scales: { x: { ticks: { callback: v => m.fmt(v) } } } },
+  }));
+  const eh = D.eth_held_by_role, ethOf = (role) => eh.filter(r => r.role === role).reduce((s, r) => s + r.eth, 0);
+  document.getElementById('ethHeldNote').textContent = `ETH held now (complete for all callers): contract wallets ${fmtN(ethOf('account_contract'))} ETH, applications ${fmtN(ethOf('application'))} ETH, 7702 EOAs ${fmtN(ethOf('account_7702_eoa'))} ETH. ERC-20 holdings were fetched only for the ≈3.9k most important addresses.`;
+
+  // 3. heatmap
+  const RELS = ['sole', 'key_rotation_only', 'alternative_exists', 'configurable_verifier'];
+  const UPGS = ['immutable', 'immutable_logic_configurable_params', 'upgradeable_proxy_admin'];
+  const X = D.curated_reliance_x_upgradeability;
+  toggle(document.getElementById('heatToggle'), METRICS, m => {
+    const max = Math.max(...X.map(r => r[m.key] || 0));
+    const accent = css('--bad');
+    const cell = (rel, upg) => {
+      const r = X.find(x => x.reliance === rel && x.upgradeability === upg);
+      if (!r) return '<td class="cell"><span class="small">–</span></td>';
+      const a = Math.sqrt((r[m.key] || 0) / max);
+      return `<td class="cell" style="background:color-mix(in srgb, ${accent} ${Math.round(a * 55)}%, transparent)"><div class="big">${m.fmt(r[m.key])}</div>` +
+        `<div class="small">${r.contracts} contracts · ${fmtN(r.txs_y1)} tx · ${fmtUSD(r.usd_tx_y1)} · held ${fmtUSD(r.usd_held_now)}</div></td>`;
+    };
+    document.getElementById('heat').innerHTML = `<thead><tr><th></th>${UPGS.map(u => `<th style="text-align:center">${lbl(u)}</th>`).join('')}</tr></thead><tbody>` +
+      RELS.map(rel => `<tr><th class="row"><span class="pill ${rel}">${lbl(rel)}</span></th>${UPGS.map(u => cell(rel, u)).join('')}</tr>`).join('') + '</tbody>';
+  });
+  document.getElementById('relianceCards').innerHTML = D.curated_by_reliance.map(r => `<div class="card"><span class="pill ${r.reliance}">${lbl(r.reliance)}</span>
+    <div class="kpi" style="border:0;padding:6px 0 0;background:none"><div class="v">${r.contracts}</div><div class="l">contracts · ${fmtN(r.txs_y1)} tx · ${fmtUSD(r.usd_tx_y1)} moved · ${fmtUSD(r.usd_held_now)} held</div></div></div>`).join('');
+
+  // 4. function / signer
+  toggle(document.getElementById('funcToggle'), METRICS, m => {
+    for (const [id, rows, key] of [['funcChart', D.curated_by_function, 'function'], ['signerChart', D.curated_by_signer, 'signer']]) {
+      const sorted = [...rows].sort((a, b) => (b[m.key] || 0) - (a[m.key] || 0));
+      chart(id, { type: 'bar', data: { labels: sorted.map(r => lbl(r[key])), datasets: [{ data: sorted.map(r => r[m.key]), backgroundColor: c.series[0] }] },
+        options: { indexAxis: 'y', maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: x => m.fmt(x.raw) } } }, scales: { x: { ticks: { callback: v => m.fmt(v) } } } } });
+    }
+  });
+
+  // 5. ordering
+  const ORD = { ecrecover_only: [c.bad, 'A new PQ account cannot use the feature. A migrated EOA\'s old key still works.'],
+    signer_selects_scheme: [c.warn, 'PQ accounts can use ERC-1271 or pre-sign, but an attacker with the old key simply picks ECDSA.'],
+    ecrecover_first_then_1271: [c.warn, 'PQ accounts work via the fallback; the old key still works for the same address.'],
+    code_check_first: [c.ok, 'Safe once the account has code. Exceptions: stETH and Curve stableswap-ng pass only 65 bytes to ERC-1271.'] };
+  const ord = D.curated_by_ecdsa_order.filter(r => ORD[r.ecdsa_order]);
+  chart('orderChart', { type: 'bar', data: { labels: ord.map(r => lbl(r.ecdsa_order)), datasets: [{ label: 'Tx value', data: ord.map(r => r.usd_tx_y1), backgroundColor: ord.map(r => ORD[r.ecdsa_order][0]) }] },
+    options: { maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: x => fmtUSD(x.raw) } } }, scales: { y: { ticks: { callback: v => fmtUSD(v) } } } } });
+  document.getElementById('orderCards').innerHTML = ord.map(r => `<div class="card" style="border-left:4px solid ${ORD[r.ecdsa_order][0]}"><b>${lbl(r.ecdsa_order)}</b> · ${r.contracts} contracts · ${fmtN(r.txs_y1)} tx · ${fmtUSD(r.usd_tx_y1)}<div class="note">${ORD[r.ecdsa_order][1]}</div></div>`).join('');
+
+  // 6. permit
+  const pt = D.permit_tokens_market_cap.filter(r => r.market_cap_usd > 1e7).sort((a, b) => b.market_cap_usd - a.market_cap_usd);
+  const pcol = r => r.reliance === 'sole' ? (r.upgradeability === 'immutable' ? c.bad : c.warn) : c.ok;
+  chart('permitChart', { type: 'bar', data: { labels: pt.map(r => `${r.symbol} (${r.upgradeability === 'immutable' ? 'immutable' : 'upgradeable'})`),
+      datasets: [{ data: pt.map(r => r.market_cap_usd), backgroundColor: pt.map(pcol) }] },
+    options: { indexAxis: 'y', maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: x => { const r = pt[x.dataIndex];
+        const caveat = ['STETH'].includes(r.symbol) ? ' (ERC-1271 receives only 65 bytes)' : ''; return `${fmtUSD(x.raw)} · ${lbl(r.ecdsa_order)}${caveat}`; } } },
+      subtitle: { display: true, text: 'red: ECDSA-only and immutable · amber: ECDSA-only, upgradeable · green: has ERC-1271 path', color: c.muted } },
+      scales: { x: { type: 'logarithmic', ticks: { callback: v => Number.isInteger(Math.log10(v)) ? fmtUSD(v) : '' } } } } });
+
+  // 7. rollups
+  const SV = { 'Fraud proofs (1R, ZK)': 'Fraud proofs, single-round ZK (BN254 wrapper)', 'Fraud proofs (INT)': 'Fraud proofs, interactive (no EC in proof path)',
+    'Validity proofs (ST, SN)': 'Validity: STARK wrapped in SNARK (BN254)', 'Validity proofs (SN)': 'Validity: SNARK (BN254)',
+    'Validity proofs (ST)': 'Validity: STARK only (hash-based)', 'Validity proofs': 'Validity proofs (other)' };
+  const ro = D.l2_tvs_by_state_validation.filter(r => r.total > 0.005);
+  chart('rollupChart', { type: 'bar', data: { labels: ro.map(r => SV[r.sv] ?? (r.sv == null ? 'No state validation' : r.sv)), datasets: [
+      { label: 'Total value secured', data: ro.map(r => r.total * 1e9), backgroundColor: c.series[0] },
+      { label: 'Canonical (L1 escrow)', data: ro.map(r => r.canonical * 1e9), backgroundColor: c.series[2] }] },
+    options: { maintainAspectRatio: false, plugins: { tooltip: { callbacks: { label: x => `${x.dataset.label}: ${fmtUSD(x.raw)}` } } }, scales: { y: { ticks: { callback: v => fmtUSD(v) } } } } });
+
+  // 8. lattice
+  document.getElementById('latticeTable').innerHTML = '<thead><tr><th>Address</th><th>Scheme</th><th class="n">Deployed (block)</th><th class="n">Code size</th><th>Deployer</th></tr></thead><tbody>' +
+    D.lattice_contracts.map(r => `<tr><td class="mono"><a href="https://etherscan.io/address/${r.address}">${r.address}</a></td><td>${r.scheme}</td><td class="n">${r.block_number.toLocaleString()}</td><td class="n">${r.codesize.toLocaleString()} B</td><td class="mono">${r.deployer}</td></tr>`).join('') + '</tbody>';
+
+  // 9. explorer
+  const rows = D.contracts;
+  const fill = (id, key, vals) => { const s = document.getElementById(id); [...new Set(vals)].filter(Boolean).sort().forEach(v => s.insertAdjacentHTML('beforeend', `<option value="${esc(v)}">${esc(lbl(v))}</option>`)); s.onchange = render; };
+  fill('fFunc', 'function', rows.map(r => r.function));
+  fill('fRel', 'reliance', rows.map(r => r.reliance));
+  fill('fUpg', 'upgradeability', rows.map(r => r.upgradeability));
+  fill('fCat', 'cats', rows.flatMap(r => (r.cats || '').split(' ').map(x => x.split(':')[0])));
+  document.getElementById('fRole').onchange = render;
+  document.getElementById('q').oninput = render;
+  const COLS = [
+    ['protocol', 'Protocol'], ['function', 'Function'], ['signer', 'Signer'], ['reliance', 'Reliance'], ['ecdsa_order', 'ECDSA order'],
+    ['upgradeability', 'Code'], ['txs_y1', 'Tx in year', 'n'], ['usd_tx_y1', 'Tx value', 'n'], ['usd_held_now', 'Held now', 'n'],
+  ];
+  let sortKey = 'txs_y1', sortDir = -1, open = new Set();
+  function render() {
+    const q = document.getElementById('q').value.toLowerCase();
+    const fr = document.getElementById('fRole').value, ff = document.getElementById('fFunc').value, fl = document.getElementById('fRel').value,
+          fu = document.getElementById('fUpg').value, fc = document.getElementById('fCat').value;
+    let list = rows.filter(r => (!fr || (fr === 'acct') === r.is_account) && (!ff || r.function === ff) && (!fl || r.reliance === fl) && (!fu || r.upgradeability === fu)
+      && (!fc || (r.cats || '').split(' ').some(x => x.split(':')[0] === fc))
+      && (!q || [r.address, r.protocol, r.contract_name, r.evidence, r.pq_replacement, r.admin].join(' ').toLowerCase().includes(q)));
+    list.sort((a, b) => { const x = a[sortKey], y = b[sortKey]; if (x == null) return 1; if (y == null) return -1; return (typeof x === 'number' ? x - y : String(x).localeCompare(String(y))) * sortDir; });
+    document.getElementById('explorerCount').textContent = `${list.length} of ${rows.length} contracts`;
+    const head = '<thead><tr>' + COLS.map(([k, t, n]) => `<th data-k="${k}" class="${n || ''}">${t}${k === sortKey ? (sortDir < 0 ? ' ↓' : ' ↑') : ''}</th>`).join('') + '</tr></thead>';
+    const body = list.map(r => {
+      const main = `<tr class="row" data-a="${r.address}"><td><b>${esc(r.protocol)}</b>${r.is_account ? ' <span class="pill">wallet</span>' : ''}${r.confidence === 'low' ? ' <span class="pill">low conf.</span>' : ''}<div class="note mono">${r.address.slice(0, 10)}…${r.address.slice(-4)}</div></td>` +
+        `<td>${esc(lbl(r.function))}</td><td>${esc(lbl(r.signer))}</td><td><span class="pill ${r.reliance}">${esc(lbl(r.reliance))}</span></td><td>${esc(lbl(r.ecdsa_order))}</td>` +
+        `<td>${esc(lbl(r.upgradeability))}</td><td class="n">${fmtN(r.txs_y1)}</td><td class="n">${fmtUSD(r.usd_tx_y1)}</td><td class="n">${fmtUSD(r.usd_held_now)}</td></tr>`;
+      const det = open.has(r.address) ? `<tr class="detail"><td colspan="${COLS.length}"><dl>
+        <dt>Address</dt><dd class="mono"><a href="https://etherscan.io/address/${r.address}">${r.address}</a></dd>
+        <dt>Contract</dt><dd>${esc(r.contract_name)}</dd><dt>Categories (tx in year)</dt><dd class="mono">${esc(r.cats)}</dd>
+        <dt>Crypto role</dt><dd>${esc(r.crypto_role)} ${r.crypto_role === 'auxiliary' ? '(side feature; main function works without it)' : '(main purpose depends on it)'}</dd>
+        <dt>Admin / upgrade path</dt><dd>${esc(r.admin) || '–'}</dd><dt>PQ path</dt><dd>${esc(r.pq_replacement)}</dd>
+        <dt>Evidence</dt><dd>${esc(r.evidence)}</dd><dt>Confidence</dt><dd>${esc(r.confidence)}</dd></dl></td></tr>` : '';
+      return main + det;
+    }).join('');
+    const t = document.getElementById('explorer');
+    t.innerHTML = head + '<tbody>' + body + '</tbody>';
+    t.querySelectorAll('th').forEach(th => th.onclick = () => { const k = th.dataset.k; sortDir = k === sortKey ? -sortDir : (COLS.find(c => c[0] === k)[2] ? -1 : 1); sortKey = k; render(); });
+    t.querySelectorAll('tr.row').forEach(tr => tr.onclick = () => { const a = tr.dataset.a; open.has(a) ? open.delete(a) : open.add(a); render(); });
+  }
+  render();
+}).catch(e => { document.querySelector('main').insertAdjacentHTML('afterbegin', `<p style="color:var(--bad)">Failed to load data.json: ${esc(e)}</p>`); });
+</script>
+</body>
+</html>
