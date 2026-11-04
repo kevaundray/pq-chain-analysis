@@ -21,7 +21,7 @@
   - 160 contracts are fully immutable (11.6M transactions, $459B).
   - 98 have immutable code with configurable keys or verifiers ($472B).
   - 88 sit behind an admin-upgradeable proxy ($168B, $18.8B held).
-  - 43 are **both immutable and sole**: $104B per year and $15.6B held, mostly ECDSA-only `permit` tokens.
+  - 43 are **both immutable and sole**: $104B per year and $15.6B held. Almost all the held funds are in 14 ECDSA-only `permit` tokens (wstETH, DAI, USDe…); most of the value moved ($73B) goes through 4 trading contracts (UniswapX cosigner, KyberSwap RFQ, Clipper, AirSwap).
 - **Who signs matters more than whether the user is PQ:**
   - **End-user signatures:** 63 contracts, $457B, $32B held. These need ERC-1271 or ERC-7913 support so PQ accounts can sign, plus EIP-8151 so that migrated EOAs' old keys stop working.
   - **Single operator keys:** 88 contracts, $385B (RFQ quotes, cosigners, paymasters, vouchers).
