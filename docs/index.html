@@ -9,327 +9,367 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
+/* ---------- tokens ---------- */
 :root {
-  --paper: #fbfaf7; --ink: #1c1b19; --ink2: #4a4844; --muted: #85817a; --rule: #e7e3db; --tint: #f3f0ea;
-  --sole: #b5382a; --rot: #c08a1e; --alt: #2f7a57; --ver: #3c6c9e;
-  --acct: #b9b4aa; --acct2: #d6d1c7; --app: #1c1b19;
+  --paper: #fbfaf7; --ink: #1c1b19; --ink2: #47453f; --muted: #8a857c; --rule: #e6e2d9; --rule2: #d6d1c6; --tint: #f3f0e9;
+  --sole: #b5382a; --rot: #bf8a1f; --alt: #2f7a57; --ver: #3c6c9e;
+  --acct: #b9b4aa; --acct2: #dcd7cd; --app: #1c1b19;
   --serif: "Newsreader", Georgia, "Times New Roman", serif;
   --sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  /* 8px spacing scale */
+  --s1: 4px; --s2: 8px; --s3: 12px; --s4: 16px; --s5: 24px; --s6: 32px; --s7: 48px; --s8: 64px; --s9: 96px; --s10: 128px;
+  --container: 1080px; --prose: 660px; --gutter: 40px;
 }
 @media (prefers-color-scheme: dark) {
   :root {
-    --paper: #151412; --ink: #ece8e1; --ink2: #bdb8ae; --muted: #8a857c; --rule: #2c2a26; --tint: #1d1c19;
+    --paper: #151412; --ink: #ece8e1; --ink2: #bab5ab; --muted: #8a857c; --rule: #2a2824; --rule2: #3a3731; --tint: #1c1b18;
     --sole: #e0705f; --rot: #d9a53c; --alt: #5fb48a; --ver: #7aa5d6;
-    --acct: #5a564f; --acct2: #3d3a35; --app: #ece8e1;
+    --acct: #5a564f; --acct2: #3a3732; --app: #ece8e1;
   }
 }
+@media (max-width: 720px) { :root { --gutter: 20px; } }
+
+/* ---------- base ---------- */
 * { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; }
-body { margin: 0; background: var(--paper); color: var(--ink); font: 400 17px/1.65 var(--sans); font-feature-settings: "ss01", "cv11"; }
-a { color: inherit; text-decoration-color: var(--muted); text-underline-offset: 3px; }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 400 16px/1.6 var(--sans); font-feature-settings: "cv11"; -webkit-font-smoothing: antialiased; }
+a { color: inherit; text-decoration-color: var(--rule2); text-underline-offset: 3px; }
 a:hover { text-decoration-color: var(--ink); }
-.num { font-variant-numeric: tabular-nums; }
+code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .88em; }
+.num, td.n { font-variant-numeric: tabular-nums; }
+p { margin: 0; }
 
-.top { display: flex; justify-content: space-between; align-items: baseline; max-width: 1040px; margin: 0 auto; padding: 22px 24px 0; font-size: 13px; color: var(--muted); letter-spacing: .01em; }
-.top a { text-decoration: none; margin-left: 18px; }
-.top a:hover { color: var(--ink); }
+.container { max-width: calc(var(--container) + 2 * var(--gutter)); margin: 0 auto; padding: 0 var(--gutter); }
+.prose { max-width: var(--prose); }
 
-.col { max-width: 680px; margin: 0 auto; padding: 0 24px; }
-.wide { max-width: 1040px; margin: 0 auto; padding: 0 24px; }
+/* ---------- masthead ---------- */
+.masthead { display: flex; justify-content: space-between; align-items: center; height: 56px; border-bottom: 1px solid var(--rule); font-size: 13px; color: var(--muted); }
+.masthead nav a { text-decoration: none; margin-left: var(--s5); }
+.masthead nav a:hover { color: var(--ink); }
 
-.hero { padding: 72px 0 40px; }
-.kicker { font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: var(--sole); font-weight: 600; margin: 0 0 18px; }
-h1 { font: 500 clamp(36px, 5.4vw, 58px)/1.06 var(--serif); letter-spacing: -.015em; margin: 0 0 22px; }
-.dek { font: 400 21px/1.5 var(--serif); color: var(--ink2); margin: 0 0 26px; }
+/* ---------- hero ---------- */
+.hero { padding: var(--s9) 0 var(--s8); }
+.eyebrow { font-size: 12px; letter-spacing: .1em; text-transform: uppercase; font-weight: 600; color: var(--muted); margin: 0 0 var(--s4); }
+.hero .eyebrow { color: var(--sole); }
+h1 { font: 500 clamp(38px, 5.6vw, 64px)/1.04 var(--serif); letter-spacing: -.02em; margin: 0 0 var(--s5); max-width: 860px; }
+.dek { font: 400 clamp(19px, 2vw, 22px)/1.5 var(--serif); color: var(--ink2); max-width: var(--prose); margin: 0 0 var(--s4); }
 .byline { font-size: 13px; color: var(--muted); }
 
-.lead { font: 400 clamp(26px, 3.4vw, 34px)/1.3 var(--serif); margin: 36px 0 8px; letter-spacing: -.005em; }
-.lead b { font-weight: 600; }
-.lead .hl { color: var(--sole); }
+.headline-stat { margin: var(--s8) 0 0; padding: var(--s6) 0 0; border-top: 2px solid var(--ink); display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s6) var(--s6); }
+.headline-stat .big { grid-column: 1 / -1; max-width: 860px; margin-bottom: var(--s2); }
+.headline-stat .big { font: 400 clamp(24px, 2.6vw, 30px)/1.3 var(--serif); }
+.headline-stat .big b { font-weight: 600; }
+.headline-stat .big .hl { color: var(--sole); }
+.stat .v { font: 500 36px/1 var(--serif); letter-spacing: -.01em; margin-bottom: var(--s2); }
+.stat .l { font-size: 13.5px; line-height: 1.45; color: var(--ink2); }
+.headline-stat .stat { border-top: 1px solid var(--rule); padding-top: var(--s4); }
+@media (max-width: 560px) { .headline-stat { grid-template-columns: 1fr; gap: var(--s5); } }
 
-.stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border-top: 1px solid var(--ink); border-bottom: 1px solid var(--rule); margin: 40px 0 0; }
-.stat { padding: 18px 18px 20px 0; }
-.stat + .stat { padding-left: 18px; border-left: 1px solid var(--rule); }
-.stat .v { font: 500 40px/1.1 var(--serif); letter-spacing: -.01em; }
-.stat .l { font-size: 13.5px; color: var(--ink2); margin-top: 6px; line-height: 1.45; }
-@media (max-width: 640px) { .stats { grid-template-columns: 1fr; } .stat + .stat { padding-left: 0; border-left: 0; border-top: 1px solid var(--rule); } }
+/* ---------- sections ---------- */
+.block { margin-top: var(--s9); padding-top: var(--s6); border-top: 1px solid var(--rule); }
+h2 { font: 500 clamp(28px, 3.2vw, 36px)/1.15 var(--serif); letter-spacing: -.015em; margin: 0 0 var(--s4); max-width: 820px; }
+.lede { font-size: 17px; line-height: 1.6; color: var(--ink2); max-width: var(--prose); }
+.lede + .lede { margin-top: var(--s3); }
+.lede strong { color: var(--ink); font-weight: 600; }
 
-section { padding: 76px 0 0; }
-h2 { font: 500 clamp(26px, 3vw, 32px)/1.2 var(--serif); letter-spacing: -.01em; margin: 0 0 16px; }
-p { margin: 0 0 16px; color: var(--ink2); }
-p strong { color: var(--ink); font-weight: 600; }
-.figure { margin: 34px 0 10px; }
-.fig-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
-.fig-sub { font-size: 13.5px; color: var(--muted); margin-bottom: 16px; }
-.caption { font-size: 13px; color: var(--muted); margin-top: 12px; line-height: 1.55; }
+.fig { margin-top: var(--s7); }
+.fig-head { margin-bottom: var(--s5); }
+.fig-title { font-size: 14px; font-weight: 600; }
+.fig-sub { font-size: 13px; color: var(--muted); margin-top: 2px; }
+.note { font-size: 13px; line-height: 1.55; color: var(--muted); margin-top: var(--s4); max-width: var(--prose); }
 
-/* category table */
+.legend { display: flex; flex-wrap: wrap; gap: var(--s2) var(--s5); font-size: 13px; color: var(--ink2); margin-top: var(--s4); }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: var(--s2); vertical-align: -1px; }
+
+/* takeaways */
+.takeaways { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s6); margin-top: var(--s7); }
+.take { border-top: 2px solid var(--c, var(--ink)); padding-top: var(--s4); }
+.take .k { font: 500 30px/1 var(--serif); margin-bottom: var(--s2); color: var(--c, var(--ink)); }
+.take .h { font-weight: 600; font-size: 14.5px; margin-bottom: var(--s2); }
+.take p { font-size: 14px; line-height: 1.55; color: var(--ink2); }
+@media (max-width: 820px) { .takeaways { grid-template-columns: 1fr; gap: var(--s5); } }
+
+/* ---------- category table ---------- */
 .cat { width: 100%; border-collapse: collapse; font-size: 14.5px; }
-.cat td, .cat th { padding: 9px 0; border-bottom: 1px solid var(--rule); vertical-align: middle; }
-.cat th { font-size: 12px; font-weight: 500; color: var(--muted); text-align: right; letter-spacing: .02em; border-bottom: 1px solid var(--ink); padding-bottom: 8px; }
-.cat th:first-child { text-align: left; }
-.cat tr.grp td { padding: 22px 0 6px; border-bottom: 0; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+.cat th { font-size: 12px; font-weight: 500; color: var(--muted); text-align: right; padding: 0 0 var(--s2) var(--s5); border-bottom: 1px solid var(--ink); white-space: nowrap; }
+.cat th:first-child { text-align: left; padding-left: 0; }
+.cat td { padding: var(--s3) 0 var(--s3) var(--s5); border-bottom: 1px solid var(--rule); vertical-align: middle; }
+.cat td:first-child { padding-left: 0; }
+.cat tr.grp td { padding: var(--s6) 0 var(--s2); border-bottom: 0; font-size: 11.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+.cat tbody tr.grp:first-child td { padding-top: var(--s4); }
 .cat .name { font-weight: 500; }
-.cat .what { font-size: 13px; color: var(--muted); }
-.cat td.n { text-align: right; padding-left: 16px; white-space: nowrap; }
-.cat td.barcell { width: 28%; padding-left: 20px; }
-.cat .bar { height: 8px; background: var(--ink); border-radius: 1px; min-width: 1px; }
-.cat tr.total td { border-top: 1px solid var(--ink); border-bottom: 0; font-weight: 600; }
-@media (max-width: 720px) { .cat td.barcell, .cat th.barcell, .cat .hide-sm { display: none; } }
+.cat .what { font-size: 13px; color: var(--muted); margin-top: 1px; }
+.cat td.n { text-align: right; white-space: nowrap; width: 1%; }
+.cat td.barcell { width: 32%; }
+.cat .bar { height: 6px; background: var(--ink); border-radius: 3px; }
+.cat tr.total td { border-top: 1px solid var(--ink); border-bottom: 0; font-weight: 600; padding-top: var(--s4); }
+@media (max-width: 720px) { .cat .barcell, .cat .hide-sm { display: none; } .cat th, .cat td { padding-left: var(--s3); } }
 
-/* stacked share bars */
-.share { margin: 0 0 22px; }
-.share .lbl { display: flex; justify-content: space-between; font-size: 13.5px; margin-bottom: 6px; }
-.share .lbl span:last-child { color: var(--muted); }
-.share .track { display: flex; height: 34px; gap: 2px; }
-.share .seg { height: 100%; position: relative; }
-.legend { display: flex; flex-wrap: wrap; gap: 6px 22px; font-size: 13px; color: var(--ink2); margin-top: 4px; }
-.legend i { display: inline-block; width: 10px; height: 10px; margin-right: 7px; vertical-align: -1px; }
+/* ---------- stacked share ---------- */
+.share + .share { margin-top: var(--s5); }
+.share .lbl { display: flex; justify-content: space-between; font-size: 13.5px; font-weight: 500; margin-bottom: var(--s2); }
+.share .lbl span:last-child { color: var(--muted); font-weight: 400; }
+.share .track { display: flex; height: 40px; gap: 2px; }
+.share .seg { height: 100%; display: flex; align-items: center; padding-left: var(--s3); font-size: 13px; font-weight: 500; overflow: hidden; white-space: nowrap; }
+.share .seg:first-child { border-radius: 3px 0 0 3px; } .share .seg:last-child { border-radius: 0 3px 3px 0; }
 
-/* matrix */
-.matrix { display: grid; grid-template-columns: 170px repeat(3, minmax(0, 1fr)); gap: 4px; font-size: 13px; }
-.matrix .ch { font-size: 13px; font-weight: 600; color: var(--ink2); padding: 0 4px 6px; line-height: 1.35; align-self: end; }
-.matrix .ch small { font-weight: 400; color: var(--muted); font-size: 12px; }
-@media (max-width: 640px) { .mig { font-size: 13px; } .mig td, .mig th { padding-right: 8px; } }
-.matrix .rh { display: flex; flex-direction: column; justify-content: center; padding-right: 12px; font-size: 14px; font-weight: 600; line-height: 1.3; }
-.matrix .rh small { font-weight: 400; color: var(--muted); font-size: 12.5px; margin-top: 2px; }
-.matrix .tile { padding: 14px 14px 12px; min-height: 92px; border-radius: 2px; display: flex; flex-direction: column; justify-content: space-between; }
-.matrix .tile .v { font: 500 24px/1.1 var(--serif); }
-.matrix .tile .s { font-size: 12px; opacity: .78; }
+/* ---------- matrix ---------- */
+.matrix { display: grid; grid-template-columns: 200px repeat(3, minmax(0, 1fr)); gap: 6px; }
+.matrix .ch { padding: 0 var(--s2) var(--s3); align-self: end; font-size: 13px; font-weight: 600; color: var(--ink); line-height: 1.35; }
+.matrix .ch small { display: block; font-weight: 400; color: var(--muted); font-size: 12px; }
+.matrix .rh { display: flex; flex-direction: column; justify-content: center; padding-right: var(--s4); font-size: 14px; font-weight: 600; line-height: 1.3; }
+.matrix .rh small { font-weight: 400; color: var(--muted); font-size: 12.5px; margin-top: var(--s1); }
+.matrix .tile { padding: var(--s4); min-height: 104px; border-radius: 3px; display: flex; flex-direction: column; justify-content: space-between; }
+.matrix .tile .v { font: 500 26px/1 var(--serif); }
+.matrix .tile .s { font-size: 12.5px; opacity: .8; }
 @media (max-width: 720px) {
-  .matrix { grid-template-columns: 78px repeat(3, minmax(0, 1fr)); gap: 3px; }
-  .matrix .tile { padding: 10px 8px; min-height: 74px; }
-  .matrix .tile .v { font-size: 17px; }
-  .matrix .tile .s { font-size: 11px; }
-  .matrix .rh { font-size: 12.5px; padding-right: 6px; }
-  .matrix .rh small, .matrix .ch small { display: none; }
-  .matrix .ch { font-size: 11.5px; padding: 0 2px 6px; }
+  .matrix { grid-template-columns: 74px repeat(3, minmax(0, 1fr)); gap: 3px; }
+  .matrix .tile { padding: 10px; min-height: 76px; } .matrix .tile .v { font-size: 18px; } .matrix .tile .s { font-size: 11px; }
+  .matrix .rh { font-size: 12px; padding-right: 6px; } .matrix .rh small, .matrix .ch small { display: none; } .matrix .ch { font-size: 11.5px; padding: 0 2px 6px; }
 }
-.seg-toggle { display: inline-flex; gap: 18px; margin: 0 0 14px; font-size: 13.5px; }
-.seg-toggle button { background: none; border: 0; padding: 0 0 3px; font: inherit; color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent; }
-.seg-toggle button.on { color: var(--ink); border-bottom-color: var(--ink); }
+.tabs { display: flex; gap: var(--s5); margin-bottom: var(--s5); font-size: 13.5px; border-bottom: 1px solid var(--rule); overflow-x: auto; scrollbar-width: none; }
+.tabs::-webkit-scrollbar { display: none; }
+.tabs button { flex: none; white-space: nowrap; background: none; border: 0; padding: 0 0 var(--s2); margin-bottom: -1px; font: inherit; color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent; }
+.tabs button:hover { color: var(--ink); }
+.tabs button.on { color: var(--ink); border-bottom-color: var(--ink); font-weight: 500; }
 
-/* ranked bars */
-.ranked { font-size: 14.5px; }
-.ranked .row { display: grid; grid-template-columns: minmax(180px, 34%) 1fr 92px; gap: 14px; align-items: center; padding: 7px 0; border-bottom: 1px solid var(--rule); }
-.ranked .row .t { line-height: 1.3; }
-.ranked .row .t small { display: block; color: var(--muted); font-size: 12.5px; }
-.ranked .row .b { height: 10px; border-radius: 1px; }
-.ranked .row .v { text-align: right; font-variant-numeric: tabular-nums; }
-@media (max-width: 640px) { .ranked .row { grid-template-columns: 1fr 72px; } .ranked .row .b { grid-column: 1 / -1; order: 3; } }
+/* ---------- ranked bars (shared column grid so charts align) ---------- */
+.ranked .row { display: grid; grid-template-columns: 280px minmax(0, 1fr) 88px; gap: var(--s5); align-items: center; min-height: 52px; padding: var(--s2) 0; border-bottom: 1px solid var(--rule); }
+.ranked .row:first-child { border-top: 1px solid var(--rule); }
+.ranked .t { font-size: 14.5px; line-height: 1.3; }
+.ranked .t small { display: block; color: var(--muted); font-size: 12.5px; margin-top: 2px; }
+.ranked .b { height: 10px; border-radius: 2px; }
+.ranked .v { text-align: right; font-size: 14.5px; font-variant-numeric: tabular-nums; font-weight: 500; }
+@media (max-width: 720px) { .ranked .row { grid-template-columns: minmax(0, 1fr) 72px; gap: var(--s2) var(--s3); } .ranked .b { grid-column: 1 / -1; grid-row: 2; } }
 
-/* migration table */
+/* ---------- migration table ---------- */
 .mig { width: 100%; border-collapse: collapse; font-size: 14.5px; }
-.mig th { font-size: 12px; font-weight: 500; color: var(--muted); text-align: left; padding: 0 12px 8px 0; border-bottom: 1px solid var(--ink); vertical-align: bottom; }
-.mig td { padding: 14px 12px 14px 0; border-bottom: 1px solid var(--rule); vertical-align: top; line-height: 1.45; }
-.mig td.n { white-space: nowrap; text-align: right; font-variant-numeric: tabular-nums; }
-.mig .ex { display: block; font-size: 12.5px; color: var(--muted); }
-.verdict { font-weight: 600; }
-.verdict.bad { color: var(--sole); } .verdict.mid { color: var(--rot); } .verdict.good { color: var(--alt); }
-.verdict small { display: block; font-weight: 400; color: var(--muted); font-size: 12.5px; }
+.mig th { font-size: 12px; font-weight: 500; color: var(--muted); text-align: left; padding: 0 var(--s5) var(--s2) 0; border-bottom: 1px solid var(--ink); vertical-align: bottom; }
+.mig td { padding: var(--s4) var(--s5) var(--s4) 0; border-bottom: 1px solid var(--rule); vertical-align: top; line-height: 1.45; }
+.mig th:last-child, .mig td:last-child { padding-right: 0; }
+.mig .n { text-align: right; white-space: nowrap; }
+.mig .ex { display: block; font-size: 12.5px; color: var(--muted); margin-top: 2px; }
+.mig .main { font-weight: 500; }
+.verdict { display: block; font-weight: 600; }
+.verdict.bad { color: var(--sole); } .verdict.good { color: var(--alt); }
+@media (max-width: 640px) { .mig { font-size: 13px; } .mig th, .mig td { padding-right: var(--s3); } .mig .hide-sm { display: none; } }
 
-/* pull quote / callout */
-.callout { border-left: 2px solid var(--sole); padding: 4px 0 4px 20px; margin: 30px 0; font: 400 21px/1.5 var(--serif); color: var(--ink); }
+.callout { margin-top: var(--s6); padding: var(--s5) var(--s5) var(--s5) var(--s5); background: var(--tint); border-left: 3px solid var(--sole); max-width: 820px; font: 400 18px/1.55 var(--serif); }
 
-/* replacements */
+/* ---------- replacements ---------- */
 .repl { width: 100%; border-collapse: collapse; font-size: 14px; }
-.repl th { text-align: left; font-size: 12px; font-weight: 500; color: var(--muted); padding: 0 16px 8px 0; border-bottom: 1px solid var(--ink); }
-.repl td { padding: 13px 16px 13px 0; border-bottom: 1px solid var(--rule); vertical-align: top; line-height: 1.5; color: var(--ink2); }
-.repl td:first-child { color: var(--ink); font-weight: 500; width: 22%; }
-@media (max-width: 720px) { .repl .hide-sm { display: none; } }
+.repl th { text-align: left; font-size: 12px; font-weight: 500; color: var(--muted); padding: 0 var(--s5) var(--s2) 0; border-bottom: 1px solid var(--ink); }
+.repl td { padding: var(--s4) var(--s5) var(--s4) 0; border-bottom: 1px solid var(--rule); vertical-align: top; line-height: 1.5; color: var(--ink2); }
+.repl td:first-child { color: var(--ink); font-weight: 500; width: 24%; }
+.repl th:last-child, .repl td:last-child { padding-right: 0; }
+@media (max-width: 720px) { .repl .hide-sm { display: none; } .repl td:first-child { width: 40%; } }
 
-/* explorer */
-.search { display: flex; gap: 10px; flex-wrap: wrap; margin: 26px 0 8px; }
-.search input, .search select { font: inherit; font-size: 14px; color: var(--ink); background: transparent; border: 0; border-bottom: 1px solid var(--rule); padding: 8px 2px; border-radius: 0; }
-.search input { flex: 1 1 260px; }
-.search input:focus, .search select:focus { outline: none; border-bottom-color: var(--ink); }
-.ex-count { font-size: 13px; color: var(--muted); margin-bottom: 6px; }
+/* ---------- explorer ---------- */
+.filters { display: flex; gap: var(--s3); flex-wrap: wrap; align-items: center; margin-bottom: var(--s4); }
+.filters input, .filters select { font: inherit; font-size: 14px; color: var(--ink); background: var(--paper); border: 1px solid var(--rule2); border-radius: 6px; padding: 9px 12px; }
+.filters input { flex: 1 1 280px; }
+.filters input:focus, .filters select:focus { outline: none; border-color: var(--ink); }
+.ex-count { font-size: 13px; color: var(--muted); margin-left: auto; }
 .ext { width: 100%; border-collapse: collapse; font-size: 14px; }
-.ext th { text-align: left; font-size: 12px; font-weight: 500; color: var(--muted); padding: 10px 12px 8px 0; border-bottom: 1px solid var(--ink); cursor: pointer; white-space: nowrap; user-select: none; }
+.ext th { text-align: left; font-size: 12px; font-weight: 500; color: var(--muted); padding: 0 var(--s4) var(--s2) 0; border-bottom: 1px solid var(--ink); cursor: pointer; white-space: nowrap; user-select: none; }
+.ext th:hover { color: var(--ink); }
 .ext th.n, .ext td.n { text-align: right; }
-.ext td { padding: 11px 12px 11px 0; border-bottom: 1px solid var(--rule); vertical-align: top; line-height: 1.4; }
-.ext td.n { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.ext th:last-child, .ext td:last-child { padding-right: 0; }
+.ext td { padding: var(--s3) var(--s4) var(--s3) 0; border-bottom: 1px solid var(--rule); vertical-align: top; line-height: 1.4; }
+.ext td.n { white-space: nowrap; }
 .ext tr.r { cursor: pointer; }
 .ext tr.r:hover td { background: var(--tint); }
 .ext .p { font-weight: 500; }
-.ext .f { display: block; font-size: 12.5px; color: var(--muted); }
-.dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 7px; vertical-align: 1px; }
-.ext tr.d td { background: var(--tint); padding: 16px 18px; font-size: 13.5px; }
-.ext tr.d dl { display: grid; grid-template-columns: 150px 1fr; gap: 6px 16px; margin: 0; }
+.ext .f { display: block; font-size: 12.5px; color: var(--muted); margin-top: 2px; }
+.dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: var(--s2); vertical-align: 1px; }
+.ext tr.d td { background: var(--tint); padding: var(--s5); }
+.ext tr.d dl { display: grid; grid-template-columns: 170px minmax(0, 1fr); gap: var(--s2) var(--s5); margin: 0; font-size: 13.5px; }
 .ext tr.d dt { color: var(--muted); }
 .ext tr.d dd { margin: 0; word-break: break-word; color: var(--ink2); }
 .mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12.5px; }
-.more { margin-top: 16px; font: inherit; font-size: 14px; background: none; border: 1px solid var(--rule); padding: 8px 16px; color: var(--ink); cursor: pointer; }
+.more { display: block; margin: var(--s5) auto 0; font: inherit; font-size: 14px; background: none; border: 1px solid var(--rule2); border-radius: 6px; padding: 9px 20px; color: var(--ink); cursor: pointer; }
 .more:hover { border-color: var(--ink); }
-@media (max-width: 720px) { .ext .hide-sm { display: none; } .ext tr.d dl { grid-template-columns: 1fr; } }
+@media (max-width: 720px) { .ext .hide-sm { display: none; } .ext tr.d dl { grid-template-columns: 1fr; } .ex-count { width: 100%; margin-left: 0; } }
 
-.defs { display: grid; grid-template-columns: 160px 1fr; gap: 10px 22px; font-size: 14px; margin: 18px 0 0; }
-.defs dt { font-weight: 600; }
-.defs dd { margin: 0; color: var(--ink2); }
-@media (max-width: 640px) { .defs { grid-template-columns: 1fr; } .defs dd { margin-bottom: 8px; } }
+/* ---------- method ---------- */
+.defs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s6) var(--s7); margin: var(--s6) 0 0; }
+.defs div dt { font-weight: 600; font-size: 14.5px; margin-bottom: var(--s1); }
+.defs div dd { margin: 0; font-size: 14px; line-height: 1.6; color: var(--ink2); }
+@media (max-width: 720px) { .defs { grid-template-columns: 1fr; gap: var(--s5); } }
 
-footer { max-width: 680px; margin: 96px auto 0; padding: 26px 24px 64px; border-top: 1px solid var(--rule); font-size: 13px; color: var(--muted); }
+footer { margin-top: var(--s10); border-top: 1px solid var(--rule); padding: var(--s6) 0 var(--s8); font-size: 13px; color: var(--muted); }
 </style>
 </head>
 <body>
 
-<div class="top"><span>Ethereum · post-quantum migration</span><span><a href="https://github.com/kevaundray/pq-chain-analysis/blob/main/REPORT.md">Full report</a><a href="https://github.com/kevaundray/pq-chain-analysis">Data &amp; code</a></span></div>
+<div class="container">
+  <div class="masthead"><span>Ethereum · post-quantum migration</span><nav><a href="https://github.com/kevaundray/pq-chain-analysis/blob/main/REPORT.md">Full report</a><a href="https://github.com/kevaundray/pq-chain-analysis">Data &amp; code</a></nav></div>
 
-<header class="col hero">
-  <p class="kicker">A census of Ethereum mainnet</p>
-  <h1>Your account can go post-quantum. The contracts you use mostly can't.</h1>
-  <p class="dek">Frame transactions (EIP-8141) are designed to let users switch to quantum-safe signatures. But every permit, signed order, bridge attestation and rollup proof is checked by a contract — and those contracts still verify cryptography a quantum computer can break.</p>
-  <div class="byline">Usage: March 2025 – March 2026 (blocks 22.1M–24.7M). Contract state and balances: November 2026.</div>
+  <header class="hero">
+    <p class="eyebrow">A census of Ethereum mainnet</p>
+    <h1>Your account can go post&#8209;quantum. The contracts you use mostly can't.</h1>
+    <p class="dek">Frame transactions (EIP-8141) are designed to let users switch to quantum-safe signatures. But every permit, signed order, bridge attestation and rollup proof is checked by a contract — and those contracts still verify cryptography a quantum computer can break.</p>
+    <p class="byline">Usage March 2025 – March 2026 · contract state and balances November 2026</p>
+    <div class="headline-stat" id="headline"></div>
+  </header>
 
-  <p class="lead" id="lead"></p>
-  <div class="stats" id="stats"></div>
-</header>
+  <!-- 1 -->
+  <section class="block">
+    <p class="eyebrow">The scale</p>
+    <h2>Almost all of it is one precompile: <code style="font-size:.82em">ecrecover</code></h2>
+    <p class="lede">We counted every contract that verifies pre-quantum cryptography inside the EVM — ECDSA signatures, the elliptic-curve precompiles behind SNARKs, BLS, blobs and passkeys, the same curve maths done in software, and RSA — and searched all deployed bytecode for post-quantum lattice verifiers.</p>
+    <div class="fig">
+      <div class="fig-head"><div class="fig-title">Contracts using pre-quantum cryptography, by kind</div><div class="fig-sub">Bars show transactions in the year on a log scale — each step is 10×</div></div>
+      <table class="cat" id="catTable"></table>
+      <p class="note">"Active in year" counts contracts that made at least one call between March 2025 and March 2026. "Transactions" counts distinct transactions they appeared in; a transaction can use several kinds.</p>
+    </div>
+  </section>
 
-<main>
+  <!-- 2 -->
+  <section class="block">
+    <p class="eyebrow">Who's calling</p>
+    <h2>Most callers are wallets. Most activity is applications.</h2>
+    <p class="lede" id="whoText"></p>
+    <div class="fig">
+      <div class="fig-head"><div class="fig-title">Who calls <code>ecrecover</code></div><div class="fig-sub">Share of contracts, and of the transactions they appear in</div></div>
+      <div id="whoFig"></div>
+      <p class="note">Wallet owners can rotate keys or move funds themselves. The rest of this piece is about applications — contracts users depend on but don't control.</p>
+    </div>
+  </section>
 
-<section class="col">
-  <h2>Almost all of it is one precompile</h2>
-  <p>We looked for every contract that verifies pre-quantum cryptography inside the EVM: <strong>ecrecover</strong> (secp256k1 ECDSA), the <strong>elliptic-curve precompiles</strong> used for SNARKs, BLS, blobs and passkeys, the same curve maths done <strong>in software</strong>, and <strong>RSA</strong>. For contrast, we also searched all bytecode for <strong>lattice</strong> (post-quantum) verifiers.</p>
-</section>
-<div class="wide figure">
-  <div class="col" style="padding:0">
-    <div class="fig-title">Contracts using pre-quantum cryptography, by kind</div>
-    <div class="fig-sub">Bars show transactions in the year, on a log scale — each step is 10×.</div>
-  </div>
-  <table class="cat" id="catTable"></table>
-  <div class="caption col" style="padding:0" id="catCaption"></div>
+  <!-- 3 -->
+  <section class="block">
+    <p class="eyebrow">Can it change?</p>
+    <h2>Most applications can't drop pre-quantum cryptography on their own</h2>
+    <p class="lede">We read the source or bytecode of the <span id="nCurated"></span> largest applications — <span id="covShare"></span> of application value — and asked two questions: <strong>is there a way in without the pre-quantum check?</strong> and <strong>can the contract change?</strong></p>
+    <div class="fig">
+      <div class="tabs" id="mxTabs"></div>
+      <div class="matrix" id="matrix"></div>
+      <p class="note">"Configurable" means the code is fixed but an admin can change its keys, signers or verifier address. Stronger colour means more.</p>
+    </div>
+    <div class="takeaways" id="mxTakeaways"></div>
+  </section>
+
+  <!-- 4 -->
+  <section class="block">
+    <p class="eyebrow">Who holds the keys</p>
+    <h2>Much of the value is authorised by operators, not users</h2>
+    <p class="lede">Market makers sign quotes, bridge committees sign attestations, oracles sign reports. A user switching to a quantum-safe account changes none of that — those operators have to ship new contract code.</p>
+    <div class="fig">
+      <div class="fig-head"><div class="fig-title">Value moved in a year, by what the cryptography is for</div><div class="fig-sub">Hand-classified applications · colour shows who holds the key</div></div>
+      <div class="ranked" id="funcFig"></div>
+      <div class="legend" id="funcLegend"></div>
+    </div>
+  </section>
+
+  <!-- 5 -->
+  <section class="block">
+    <p class="eyebrow">Migration</p>
+    <h2>What happens when a user goes post-quantum</h2>
+    <p class="lede">Users can open a <strong>new account</strong> with a post-quantum key, or <strong>keep their address</strong> and change how it's authorised. How a contract checks signatures decides what each of them experiences.</p>
+    <div class="fig">
+      <table class="mig" id="migTable"></table>
+    </div>
+    <div class="callout">The fix for the migrated-address case is at the protocol level: <a href="https://eips.ethereum.org/EIPS/eip-8151">EIP-8151</a> makes <code>ecrecover</code> fail for any address that has real code — but only once the account has left EIP-7702 delegation.</div>
+  </section>
+
+  <!-- 6 -->
+  <section class="block">
+    <p class="eyebrow">Tokens</p>
+    <h2>Billions in tokens sit behind ECDSA-only <code style="font-size:.82em">permit</code></h2>
+    <p class="lede"><code>permit</code> approves a spender with a signature instead of a transaction. In most tokens that signature can only be ECDSA, and if the token is immutable, only a protocol change can stop an old key from using it.</p>
+    <div class="fig">
+      <div class="fig-head"><div class="fig-title">Tokens whose permit was used in the year</div><div class="fig-sub">By market cap</div></div>
+      <div class="ranked" id="permitFig"></div>
+      <div class="legend" id="permitLegend"></div>
+      <p class="note">stETH and Curve stableswap-ng accept ERC-1271 but pass it only 65 bytes — too short for a post-quantum signature.</p>
+    </div>
+  </section>
+
+  <!-- 7 -->
+  <section class="block">
+    <p class="eyebrow">Proofs</p>
+    <h2>Rollups lean on curves too — and lattices are nowhere</h2>
+    <p class="lede">ZK rollups prove their state to L1 with SNARKs over BN254, and every blob-posting rollup relies on KZG commitments. Most SNARK verifiers are standalone contracts a rollup can swap, at the cost of roughly 4–20× more gas for hash-based (STARK) verification.</p>
+    <div class="fig">
+      <div class="fig-head"><div class="fig-title">Value secured by rollups, by how they prove state to L1</div><div class="fig-sub">L2BEAT, November 2026</div></div>
+      <div class="ranked" id="rollupFig"></div>
+    </div>
+    <div class="takeaways" style="grid-template-columns: minmax(0, 1fr)"><div class="take" style="--c: var(--ver); max-width: var(--prose)"><div class="k" id="latticeN"></div><div class="h">post-quantum (lattice) verifiers on mainnet</div><p id="latticeText"></p></div></div>
+  </section>
+
+  <!-- 8 -->
+  <section class="block">
+    <p class="eyebrow">Replacements</p>
+    <h2>What each use would need instead</h2>
+    <div class="fig">
+      <table class="repl">
+        <thead><tr><th>What the contract needs</th><th class="hide-sm">Today</th><th>Post-quantum path</th><th class="hide-sm">Cost today</th></tr></thead>
+        <tbody>
+          <tr><td>A user authorises something offline — permit, order, meta-transaction</td><td class="hide-sm">ecrecover of the user's key</td><td>Ask the account instead: ERC-1271, or ERC-7913 against a PQ verifier. Check for account code before trying ECDSA. Protect immutable contracts with EIP-8151.</td><td class="hide-sm">Falcon ≈0.45–3.9M gas · ML-DSA ≈1.2M · SPHINCS-variants ≈40–200k. Precompiles are only drafts.</td></tr>
+          <tr><td>An operator authorises execution — quote, cosigner, voucher, paymaster</td><td class="hide-sm">One ECDSA key</td><td>Verify a PQ signature, or an ERC-1271 signer contract. Signatures grow from 65 bytes to 0.7–17 KB.</td><td class="hide-sm">Same, paid on every fill</td></tr>
+          <tr><td>A committee attests to a fact — bridges, oracles</td><td class="hide-sm">m-of-n secp256k1</td><td>Hash-based signatures per signer, or aggregated into one STARK. ZK light clients.</td><td class="hide-sm">No production PQ committee yet</td></tr>
+          <tr><td>Verify a SNARK — rollups, zkVMs, privacy pools, identity</td><td class="hide-sm">BN254 pairing</td><td>STARK/FRI or WHIR verifier, or recursion into a PQ proof.</td><td class="hide-sm">≈1.1–5.6M gas vs ≈300k</td></tr>
+          <tr><td>Aggregate signatures</td><td class="hide-sm">BLS</td><td>Hash-based signatures aggregated inside a SNARK or STARK.</td><td class="hide-sm">No EVM verifier yet</td></tr>
+          <tr><td>Open blob commitments</td><td class="hide-sm">KZG</td><td>Post-quantum data availability at the protocol level.</td><td class="hide-sm">On the roadmap</td></tr>
+          <tr><td>Passkeys</td><td class="hide-sm">P-256</td><td>ML-DSA WebAuthn (IETF draft; first passkey managers shipping).</td><td class="hide-sm">≈1.2M gas without a precompile</td></tr>
+          <tr><td>Randomness, Schnorr via the ecrecover trick</td><td class="hide-sm">secp256k1 algebra</td><td>No PQ VRF verifier exists; commit-reveal or threshold randomness proven in a STARK.</td><td class="hide-sm">—</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 9 -->
+  <section class="block" id="browse">
+    <p class="eyebrow">The data</p>
+    <h2>Browse the contracts</h2>
+    <p class="lede">All <span id="nAll"></span> contracts we classified by hand. Select a row for the evidence, who controls upgrades, and a suggested post-quantum path.</p>
+    <div class="fig">
+      <div class="filters">
+        <input id="q" placeholder="Search protocol, address or mechanism" aria-label="Search">
+        <select id="fRel" aria-label="Reliance"><option value="">Any reliance</option></select>
+        <select id="fUpg" aria-label="Code"><option value="">Any code</option></select>
+        <select id="fKind" aria-label="Kind"><option value="app">Applications</option><option value="acct">Wallets</option><option value="">Both</option></select>
+        <span class="ex-count" id="exCount"></span>
+      </div>
+      <table class="ext" id="ext"></table>
+      <button class="more" id="more">Show all</button>
+    </div>
+  </section>
+
+  <!-- 10 -->
+  <section class="block" id="method">
+    <p class="eyebrow">Method</p>
+    <h2>How this was measured</h2>
+    <dl class="defs">
+      <div><dt>Contracts</dt><dd>Addresses that, as the executing contract, made a successful call to an elliptic-curve precompile, or to <code>modexp</code> with a curve or RSA-sized modulus. Proxies count as the proxy; EIP-7702 accounts as the EOA. From a trace of every mainnet transaction.</dd></div>
+      <div><dt>Active in the year</dt><dd>Made at least one such call between March 2025 and March 2026. "Ever" counts since each precompile went live.</dd></div>
+      <div><dt>Transactions</dt><dd>Distinct transactions in the year in which at least one of the contracts made such a call. A transaction counts once however many calls it makes.</dd></div>
+      <div><dt>Value moved</dt><dd>For each of those transactions, the largest single token or ETH transfer in it, summed. Estimated from a 1-in-10 block sample, priced at the time. It understates bridges, whose attestations usually run separately from the transfer.</dd></div>
+      <div><dt>Held now</dt><dd>ETH plus the top 50 tokens the contract holds today. Rollup and bridge escrows are often separate contracts, so this undercounts what a verifier secures.</dd></div>
+      <div><dt>Reliance and code</dt><dd>Read from verified source or bytecode for the largest contracts; rules (proxy slots, selectors, names) for the long tail. 65 of the 433 hand classifications are low confidence.</dd></div>
+    </dl>
+    <p class="note" style="margin-top: var(--s6)">Contracts that implement ECDSA in plain Solidity, or weren't called during the year, aren't counted. Full method, caveats and sources are in the <a href="https://github.com/kevaundray/pq-chain-analysis/blob/main/REPORT.md">report</a>.</p>
+  </section>
+
+  <footer>Data from a full mainnet precompile trace (<a href="https://github.com/CPerezz/precompile-tracer">precompile-tracer</a>), Xatu, Blockscout, Sourcify, DefiLlama and L2BEAT · <a href="https://github.com/kevaundray/pq-chain-analysis">github.com/kevaundray/pq-chain-analysis</a></footer>
 </div>
-
-<section class="col">
-  <h2>Most callers are wallets. Most activity is applications.</h2>
-  <p id="whoText"></p>
-  <div class="figure" id="whoFig"></div>
-  <p>Wallets are the easy part: their owners can rotate keys or move funds. The rest of this piece looks at the applications — the contracts users depend on but don't control.</p>
-</section>
-
-<section class="col">
-  <h2>Who can fix the applications?</h2>
-  <p>We read the source (or bytecode) of the <span id="nCurated"></span> largest applications, which carry <span id="covShare"></span> of application value. For each we asked two questions: <strong>is there a way to use it without the pre-quantum check</strong>, and <strong>can the contract change</strong>?</p>
-</section>
-<div class="wide figure">
-  <div class="col" style="padding:0">
-    <div class="seg-toggle" id="mxToggle"></div>
-  </div>
-  <div class="matrix" id="matrix"></div>
-  <div class="caption col" style="padding:0">Each tile: the contracts in that cell and what they did over the year. Darker means more. "Configurable" means the code is fixed but its keys, signers or verifier address can be changed by an admin.</div>
-</div>
-<section class="col" style="padding-top:28px">
-  <p id="mxText"></p>
-</section>
-
-<section class="col">
-  <h2>Who holds the keys matters more than whether the user is quantum-safe</h2>
-  <p>Much of the value isn't authorised by the user at all. Market makers sign quotes, bridge committees sign attestations, oracles sign reports. Those keys sit with operators, and moving them to post-quantum signatures needs new contract code, not just a new key.</p>
-  <div class="figure">
-    <div class="fig-title">Value moved in a year, by what the cryptography is used for</div>
-    <div class="fig-sub">Hand-classified applications. Colour shows who holds the key.</div>
-    <div class="ranked" id="funcFig"></div>
-    <div class="legend" id="funcLegend" style="margin-top:14px"></div>
-  </div>
-</section>
-
-<section class="col">
-  <h2>What happens when a user migrates</h2>
-  <p>A user can go post-quantum in two ways: open a <strong>new account</strong> with a PQ key, or <strong>keep their address</strong> and swap its authorisation logic. How a contract checks signatures decides what each user experiences.</p>
-  <div class="figure">
-    <table class="mig" id="migTable"></table>
-  </div>
-  <div class="callout">The fix for the migrated-address case is at the protocol level: <a href="https://eips.ethereum.org/EIPS/eip-8151">EIP-8151</a> makes <code>ecrecover</code> fail for any address that has real code — but only once the account has left EIP-7702 delegation.</div>
-</section>
-
-<section class="col">
-  <h2>The permit problem</h2>
-  <p><code>permit</code> lets a holder approve a spender with a signature instead of a transaction. In most tokens that signature can only be ECDSA. If the token is immutable, nothing but a protocol change can stop an old key from being used.</p>
-  <div class="figure">
-    <div class="fig-title">Tokens whose permit was used in the year, by market cap</div>
-    <div class="ranked" id="permitFig"></div>
-    <div class="legend" id="permitLegend" style="margin-top:14px"></div>
-    <div class="caption">stETH and Curve stableswap-ng accept ERC-1271, but pass only 65 bytes to it — too short for a post-quantum signature.</div>
-  </div>
-</section>
-
-<section class="col">
-  <h2>Rollups, and the absence of lattices</h2>
-  <p>Zero-knowledge rollups prove their state to L1 with SNARKs over the BN254 curve, and every blob-posting rollup relies on KZG commitments. Most of the SNARK verifiers are standalone contracts the rollup can swap — the cost is that hash-based (STARK) verification is roughly 4–20× more gas.</p>
-  <div class="figure">
-    <div class="fig-title">Value secured by rollups, by how they prove state to L1</div>
-    <div class="fig-sub">L2BEAT, November 2026.</div>
-    <div class="ranked" id="rollupFig"></div>
-  </div>
-  <p id="latticeText"></p>
-</section>
-
-<section class="col">
-  <h2>What would replace it</h2>
-</section>
-<div class="wide figure">
-  <table class="repl">
-    <thead><tr><th>What the contract needs</th><th class="hide-sm">Today</th><th>Post-quantum path</th><th class="hide-sm">Cost today</th></tr></thead>
-    <tbody>
-      <tr><td>A user authorises something offline — permit, order, meta-transaction</td><td class="hide-sm">ecrecover of the user's EOA</td><td>Ask the account instead: ERC-1271, or ERC-7913 against a PQ verifier. Check for account code before trying ECDSA. Protect immutable contracts with EIP-8151.</td><td class="hide-sm">Falcon ≈0.45–3.9M gas, ML-DSA ≈1.2M, SPHINCS-variants ≈40–200k. Precompiles are only drafts.</td></tr>
-      <tr><td>An operator authorises execution — RFQ quote, cosigner, voucher, paymaster</td><td class="hide-sm">One ECDSA key</td><td>Verify a PQ signature, or an ERC-1271 signer contract. Signatures grow from 65 bytes to 0.7–17 KB.</td><td class="hide-sm">Same, on every fill</td></tr>
-      <tr><td>A committee attests to a fact — bridges, oracles</td><td class="hide-sm">m-of-n secp256k1</td><td>Hash-based signatures per signer, or aggregate them into one STARK. ZK light clients.</td><td class="hide-sm">No production PQ committee yet</td></tr>
-      <tr><td>Verify a SNARK — rollups, zkVMs, privacy pools, identity</td><td class="hide-sm">BN254 pairing</td><td>STARK/FRI or WHIR verifier, or recursion into a PQ proof.</td><td class="hide-sm">≈1.1–5.6M gas vs ≈300k</td></tr>
-      <tr><td>Aggregate signatures</td><td class="hide-sm">BLS</td><td>Hash-based signatures aggregated inside a SNARK or STARK.</td><td class="hide-sm">No EVM verifier yet</td></tr>
-      <tr><td>Open blob commitments</td><td class="hide-sm">KZG</td><td>Post-quantum data availability at the protocol level.</td><td class="hide-sm">On the roadmap</td></tr>
-      <tr><td>Passkeys</td><td class="hide-sm">P-256</td><td>ML-DSA WebAuthn (IETF draft, first passkey managers shipping).</td><td class="hide-sm">≈1.2M gas without a precompile</td></tr>
-      <tr><td>Randomness, Schnorr via the ecrecover trick</td><td class="hide-sm">secp256k1 algebra</td><td>No PQ VRF verifier exists; commit-reveal or threshold randomness proven in a STARK.</td><td class="hide-sm">—</td></tr>
-    </tbody>
-  </table>
-</div>
-
-<section class="col" id="browse">
-  <h2>Browse the contracts</h2>
-  <p>All <span id="nAll"></span> contracts we classified by hand. Select a row for the evidence, who controls upgrades, and the suggested post-quantum path.</p>
-</section>
-<div class="wide">
-  <div class="search">
-    <input id="q" placeholder="Search a protocol, address or mechanism" aria-label="Search">
-    <select id="fRel" aria-label="Reliance"><option value="">Any reliance</option></select>
-    <select id="fUpg" aria-label="Code"><option value="">Any code</option></select>
-    <select id="fKind" aria-label="Kind"><option value="app">Applications</option><option value="acct">Wallets</option><option value="">Both</option></select>
-  </div>
-  <div class="ex-count" id="exCount"></div>
-  <table class="ext" id="ext"></table>
-  <button class="more" id="more">Show all</button>
-</div>
-
-<section class="col" id="method">
-  <h2>How this was measured</h2>
-  <dl class="defs">
-    <dt>Contracts</dt><dd>Addresses that, as the executing contract, made a successful call to an elliptic-curve precompile or to <code>modexp</code> with a curve or RSA-sized modulus. For proxies this is the proxy; for EIP-7702 accounts it is the EOA. Taken from a trace of every mainnet transaction.</dd>
-    <dt>Active in the year</dt><dd>Made at least one such call between March 2025 and March 2026. "Ever" counts since each precompile went live.</dd>
-    <dt>Transactions</dt><dd>Distinct transactions in the year in which at least one of the contracts made such a call. A transaction counts once, however many calls it makes.</dd>
-    <dt>Value moved</dt><dd>For each of those transactions, the largest single token or ETH transfer in it, summed. Estimated from a 1-in-10 block sample and priced at the time. It measures economic size, not net flow, and understates bridges, whose attestations usually run in a separate transaction from the transfer.</dd>
-    <dt>Held now</dt><dd>ETH and the top 50 tokens the contract holds today. Rollup and bridge escrows are often separate contracts, so this undercounts what a verifier secures.</dd>
-    <dt>Reliance, code</dt><dd>Read from verified source or bytecode for the largest contracts; rules (proxy slots, selectors, names) for the long tail. 65 of the 433 hand classifications are low confidence.</dd>
-  </dl>
-  <p class="caption" style="margin-top:22px">Contracts that implement ECDSA in plain Solidity, or weren't called during the year, aren't counted. Full method, caveats and sources are in the <a href="https://github.com/kevaundray/pq-chain-analysis/blob/main/REPORT.md">report</a>.</p>
-</section>
-
-</main>
-<footer>Data from a full mainnet precompile trace (<a href="https://github.com/CPerezz/precompile-tracer">precompile-tracer</a>), Xatu, Blockscout, Sourcify, DefiLlama and L2BEAT. Code and data: <a href="https://github.com/kevaundray/pq-chain-analysis">github.com/kevaundray/pq-chain-analysis</a>.</footer>
 
 <script>
 const $ = s => document.querySelector(s);
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
 const fmtN = v => v == null ? '—' : v >= 1e9 ? (v/1e9).toFixed(1)+'B' : v >= 1e6 ? (v/1e6).toFixed(1)+'M' : v >= 1e4 ? Math.round(v/1e3)+'k' : v >= 1e3 ? (v/1e3).toFixed(1)+'k' : Math.round(v).toLocaleString();
 const fmtUSD = v => v == null ? '—' : v >= 1e12 ? '$'+(v/1e12).toFixed(2)+'T' : v >= 1e10 ? '$'+Math.round(v/1e9)+'B' : v >= 1e9 ? '$'+(v/1e9).toFixed(1)+'B' : v >= 1e6 ? '$'+Math.round(v/1e6)+'M' : v >= 1e3 ? '$'+Math.round(v/1e3)+'k' : '—';
 const pct = (a, b) => Math.round(100 * a / b) + '%';
+const sumOf = (rows, k) => rows.reduce((s, r) => s + (r[k] || 0), 0);
 
 const REL = {
-  sole: ['No alternative', 'The pre-quantum check is the only way in', '--sole'],
-  key_rotation_only: ['Keys only', 'Signers can rotate, the scheme can\'t', '--rot'],
+  sole: ['No alternative', 'The check is the only way in', '--sole'],
+  key_rotation_only: ['Keys only', 'Signers rotate, the scheme can\'t', '--rot'],
   alternative_exists: ['Alternative exists', 'ERC-1271, pre-sign or another path', '--alt'],
-  configurable_verifier: ['Swappable verifier', 'The consumer can point to a new verifier', '--ver'],
+  configurable_verifier: ['Swappable verifier', 'The consumer can repoint', '--ver'],
 };
-const UPG = { immutable: 'Immutable', immutable_logic_configurable_params: 'Immutable, configurable', upgradeable_proxy_admin: 'Upgradeable', owner_controlled_account_upgrade: 'Owner-upgradeable' };
+const UPG = { immutable: 'Immutable', immutable_logic_configurable_params: 'Configurable', upgradeable_proxy_admin: 'Upgradeable', owner_controlled_account_upgrade: 'Owner-upgradeable' };
 const FUNC = {
   operator_signed_quote_rfq: 'Market-maker quotes and cosigners', user_auth_intent_order: 'Signed orders and intents', user_auth_permit: 'Permits',
   bridge_committee_attestation: 'Bridge attestations', oracle_report_signatures: 'Oracle and keeper reports', other: 'Unidentified executors',
@@ -338,149 +378,152 @@ const FUNC = {
   bls_aggregate_signature: 'BLS aggregate signatures', user_auth_metatx_forwarder: 'Meta-transactions', passkey_webauthn: 'Passkeys',
   randomness_vrf: 'Randomness (VRF)', rsa_dkim_jwt_identity: 'RSA identity',
 };
-const SIGNER = { end_user: ['User', '--ink'], protocol_operator_single_key: ['Operator', '--rot'], committee_multisig_threshold: ['Committee', '--ver'], prover_proof: ['Proof', '--alt'], mixed: ['Mixed', '--muted'], unknown: ['Unknown', '--muted'] };
+const SIGNER = { end_user: ['User signs', '--ink'], protocol_operator_single_key: ['Operator key', '--rot'], committee_multisig_threshold: ['Committee', '--ver'], prover_proof: ['Proof', '--alt'], mixed: ['Mixed', '--muted'], unknown: ['Unknown', '--muted'] };
 
 fetch('data.json').then(r => r.json()).then(D => {
   const any = D.t1_categories.find(r => r.cat === 'ANY pre-quantum');
-  const chainTx = D.chain_tx_estimate.est_total_txs;
-  const oneIn = Math.round(chainTx / any.txs_y1);
+  const oneIn = Math.round(D.chain_tx_estimate.est_total_txs / any.txs_y1);
 
-  $('#lead').innerHTML = `In the year to March 2026, <b>${fmtN(any.txs_y1)} transactions</b> — <span class="hl">one in every ${oneIn}</span> on Ethereum — ran through a contract that checks quantum-breakable cryptography.`;
-  $('#stats').innerHTML = [
-    [fmtUSD(any.usd_tx_y1), 'moved in those transactions over the year'],
-    [fmtN(any.callers_y1), 'addresses made the calls — most of them user wallets'],
-    [String(D.lattice_contracts.length), 'post-quantum (lattice) verifiers on mainnet, called about a dozen times'],
-  ].map(([v, l]) => `<div class="stat"><div class="v num">${v}</div><div class="l">${l}</div></div>`).join('');
+  // ----- hero
+  $('#headline').innerHTML =
+    `<div class="big">In the year to March 2026, <b>${fmtN(any.txs_y1)} transactions</b> — <span class="hl">one in every ${oneIn}</span> on Ethereum — ran through a contract that checks quantum-breakable cryptography.</div>` +
+    [[fmtUSD(any.usd_tx_y1), 'moved in those transactions'],
+     [fmtN(any.callers_y1), 'addresses made the calls, most of them wallets'],
+     [String(D.lattice_contracts.length), 'post-quantum verifiers on mainnet']].map(([v, l]) => `<div class="stat"><div class="v num">${v}</div><div class="l">${l}</div></div>`).join('');
 
-  // categories
+  // ----- 1 categories
   const C = Object.fromEntries(D.t1_categories.map(r => [r.cat, r]));
   const groups = [
-    ['Signatures', [['ecrecover', 'ecrecover', 'secp256k1 ECDSA — permits, orders, bridges, wallets']]],
+    ['Signatures', [['ecrecover', 'ecrecover', 'secp256k1 ECDSA: permits, orders, bridges, wallets']]],
     ['Elliptic-curve precompiles', [['bn254', 'BN254', 'SNARK verifiers, BLS on BN254'], ['kzg', 'KZG point evaluation', 'Blob commitments'], ['p256', 'P-256', 'Passkeys'], ['bls12381', 'BLS12-381', 'BLS signatures']]],
     ['Same curves, in software', [['sw_p256', 'P-256', 'Passkey verifiers from before the precompile'], ['sw_bn254', 'BN254', 'Field maths inside SNARK verifiers'], ['sw_secp256k1', 'secp256k1', 'VRF and Schnorr tricks'], ['sw_bls12381', 'BLS12-381', ''], ['sw_ed25519', 'ed25519', '']]],
     ['RSA', [['rsa', 'RSA ≥1024-bit', 'Email (DKIM) and identity proofs']]],
   ];
   const maxLog = Math.log10(C.ecrecover.txs_y1);
   const row = (name, what, r) => {
-    const w = r.txs_y1 ? Math.max(0.5, 100 * Math.log10(Math.max(r.txs_y1, 1)) / maxLog) : null;
+    const w = r.txs_y1 ? Math.max(0.6, 100 * Math.log10(Math.max(r.txs_y1, 1)) / maxLog) : null;
     return `<tr><td><div class="name">${name}</div>${what ? `<div class="what">${what}</div>` : ''}</td>
-      <td class="n num hide-sm">${fmtN(r.callers_alltime)}</td><td class="n num">${r.callers_y1 ? fmtN(r.callers_y1) : '—'}</td>
-      <td class="n num">${r.txs_y1 ? fmtN(r.txs_y1) : '—'}</td><td class="barcell">${w == null ? '' : `<div class="bar" style="width:${w}%"></div>`}</td></tr>`;
+      <td class="n hide-sm">${fmtN(r.callers_alltime)}</td><td class="n">${r.callers_y1 ? fmtN(r.callers_y1) : '—'}</td>
+      <td class="n">${r.txs_y1 ? fmtN(r.txs_y1) : '—'}</td><td class="barcell">${w == null ? '' : `<div class="bar" style="width:${w}%"></div>`}</td></tr>`;
   };
   $('#catTable').innerHTML = `<thead><tr><th>Kind</th><th class="hide-sm">Contracts ever</th><th>Active in year</th><th>Transactions</th><th class="barcell"></th></tr></thead><tbody>` +
     groups.map(([g, items]) => `<tr class="grp"><td colspan="5">${g}</td></tr>` + items.map(([k, n, w]) => row(n, w, C[k])).join('')).join('') +
     `<tr class="grp"><td colspan="5">Post-quantum, for contrast</td></tr><tr><td><div class="name">Lattice (Falcon, ML-DSA)</div><div class="what">Found by scanning 2.5M deployed bytecodes</div></td>
-      <td class="n num hide-sm">${D.lattice_contracts.length}</td><td class="n num">${D.lattice_contracts.length}</td><td class="n num">≈13 calls</td><td class="barcell"></td></tr>` +
-    `<tr class="total"><td>Any pre-quantum</td><td class="n num hide-sm">${fmtN(any.callers_alltime)}</td><td class="n num">${fmtN(any.callers_y1)}</td><td class="n num">${fmtN(any.txs_y1)}</td><td class="barcell"></td></tr></tbody>`;
-  $('#catCaption').textContent = `"Active in year" counts contracts that made at least one call between March 2025 and March 2026; "transactions" counts distinct transactions they appeared in. Rows overlap — a transaction can use several kinds.`;
+      <td class="n hide-sm">${D.lattice_contracts.length}</td><td class="n">${D.lattice_contracts.length}</td><td class="n">≈13 calls</td><td class="barcell"></td></tr>` +
+    `<tr class="total"><td>Any pre-quantum</td><td class="n hide-sm">${fmtN(any.callers_alltime)}</td><td class="n">${fmtN(any.callers_y1)}</td><td class="n">${fmtN(any.txs_y1)}</td><td class="barcell"></td></tr></tbody>`;
 
-  // who calls ecrecover
+  // ----- 2 who
   const er = D.t2_roles_mutability.find(r => r.cat === 'ecrecover');
   const t3 = D.t3_value_by_role.filter(r => r.catgroup === 'ecrecover');
-  const sumBy = role => t3.filter(r => r.role === role).reduce((s, r) => s + (r.txs_y1 || 0), 0);
-  const txs = { eoa: sumBy('account_7702_eoa'), wal: sumBy('account_contract'), app: sumBy('application') };
+  const txBy = role => sumOf(t3.filter(r => r.role === role), 'txs_y1');
+  const txs = { eoa: txBy('account_7702_eoa'), wal: txBy('account_contract'), app: txBy('application') };
   const ct = { eoa: er.acct_7702_eoa, wal: er.acct_contract, app: er.applications };
-  const segs = [['eoa', 'EOAs with 7702 delegated code', '--acct2'], ['wal', 'Contract wallets', '--acct'], ['app', 'Applications', '--app']];
-  const bar = (title, obj) => { const tot = Object.values(obj).reduce((a, b) => a + b, 0);
-    return `<div class="share"><div class="lbl"><span>${title}</span><span>${segs.map(([k]) => pct(obj[k], tot)).join(' · ')}</span></div><div class="track">` +
-      segs.map(([k, n, c]) => `<div class="seg" style="width:${100*obj[k]/tot}%;background:var(${c})" title="${n}: ${fmtN(obj[k])}"></div>`).join('') + '</div></div>'; };
-  $('#whoFig').innerHTML = bar('Contracts calling ecrecover', ct) + bar('Transactions they appear in', txs) +
+  const segs = [['eoa', 'EOAs with 7702 code', '--acct2', 'var(--ink)'], ['wal', 'Contract wallets', '--acct', 'var(--ink)'], ['app', 'Applications', '--app', 'var(--paper)']];
+  const shareBar = (title, obj) => { const tot = obj.eoa + obj.wal + obj.app;
+    return `<div class="share"><div class="lbl"><span>${title}</span></div><div class="track">` +
+      segs.map(([k, n, c, fg]) => { const p = 100 * obj[k] / tot; return `<div class="seg" style="width:${p}%;background:var(${c});color:${fg}" title="${n}: ${fmtN(obj[k])}">${p >= 9 ? Math.round(p) + '%' : ''}</div>`; }).join('') + '</div></div>'; };
+  $('#whoFig').innerHTML = shareBar('Contracts', ct) + shareBar('Transactions', txs) +
     `<div class="legend">${segs.map(([k, n, c]) => `<span><i style="background:var(${c})"></i>${n}</span>`).join('')}</div>`;
-  $('#whoText').innerHTML = `Of the ${fmtN(er.callers_y1)} addresses that called <code>ecrecover</code> in the year, ${pct(er.acct_7702_eoa + er.acct_contract, er.callers_y1)} were user wallets — EOAs with EIP-7702 delegated code and smart-contract wallets like Safe. Only <strong>${fmtN(er.applications)}</strong> were applications. But those applications appear in <strong>${pct(txs.app, txs.eoa + txs.wal + txs.app)}</strong> of the transactions.`;
+  $('#whoText').innerHTML = `${pct(er.acct_7702_eoa + er.acct_contract, er.callers_y1)} of the ${fmtN(er.callers_y1)} addresses calling <code>ecrecover</code> were user wallets. Only <strong>${fmtN(er.applications)}</strong> were applications — but they appear in <strong>${pct(txs.app, txs.eoa + txs.wal + txs.app)}</strong> of the transactions.`;
 
-  // matrix
+  // ----- 3 matrix
   const X = D.curated_reliance_x_upgradeability;
-  const cov = D.curated_coverage; const cur = cov.find(r => String(r.curated).toLowerCase() === 'true');
+  const cov = D.curated_coverage, cur = cov.find(r => String(r.curated).toLowerCase() === 'true');
   $('#nCurated').textContent = cur.contracts;
-  $('#covShare').textContent = pct(cur.usd_tx_y1, cov.reduce((s, r) => s + (r.usd_tx_y1 || 0), 0));
+  $('#covShare').textContent = pct(cur.usd_tx_y1, sumOf(cov, 'usd_tx_y1'));
   const RORDER = ['sole', 'key_rotation_only', 'alternative_exists', 'configurable_verifier'];
-  const UORDER = [['immutable', 'Immutable<small><br>code and keys fixed</small>'], ['immutable_logic_configurable_params', 'Configurable<small><br>fixed code, settable keys or verifier</small>'], ['upgradeable_proxy_admin', 'Upgradeable<small><br>behind an admin proxy</small>']];
-  const metrics = [['usd_tx_y1', 'Value moved', fmtUSD], ['usd_held_now', 'Funds held now', fmtUSD], ['contracts', 'Contracts', fmtN]];
+  const UORDER = [['immutable', 'Immutable', 'Code and keys fixed'], ['immutable_logic_configurable_params', 'Configurable', 'Fixed code, settable keys or verifier'], ['upgradeable_proxy_admin', 'Upgradeable', 'Behind an admin proxy']];
+  const metrics = [['usd_tx_y1', 'Value moved per year', fmtUSD], ['usd_held_now', 'Funds held now', fmtUSD], ['contracts', 'Number of contracts', fmtN]];
   const drawMatrix = ([key, , fmt]) => {
     const max = Math.max(...X.map(r => r[key] || 0));
-    let h = '<div></div>' + UORDER.map(([, l]) => `<div class="ch">${l}</div>`).join('');
+    let h = '<div></div>' + UORDER.map(([, l, s]) => `<div class="ch">${l}<small>${s}</small></div>`).join('');
     for (const rel of RORDER) {
       const [name, desc, col] = REL[rel];
       h += `<div class="rh" style="color:var(${col})">${name}<small>${desc}</small></div>`;
       for (const [u] of UORDER) {
         const r = X.find(x => x.reliance === rel && x.upgradeability === u);
         const a = r ? Math.pow((r[key] || 0) / max, 0.45) : 0;
-        const dark = a > 0.72;
-        h += `<div class="tile" style="background:color-mix(in srgb, var(${col}) ${Math.round(6 + a * 84)}%, var(--paper));color:${dark ? '#fff' : 'var(--ink)'}">` +
+        h += `<div class="tile" style="background:color-mix(in srgb, var(${col}) ${Math.round(7 + a * 83)}%, var(--paper));color:${a > 0.72 ? '#fff' : 'var(--ink)'}">` +
           (r ? `<div class="v num">${fmt(r[key]) === '—' ? '<$1k' : fmt(r[key])}</div><div class="s">${r.contracts} contract${r.contracts === 1 ? '' : 's'}</div>` : `<div class="s">none</div>`) + '</div>';
       }
     }
     $('#matrix').innerHTML = h;
   };
-  $('#mxToggle').innerHTML = metrics.map(([k, l], i) => `<button class="${i ? '' : 'on'}" data-i="${i}">${l}</button>`).join('');
-  $('#mxToggle').querySelectorAll('button').forEach(b => b.onclick = () => { $('#mxToggle').querySelectorAll('button').forEach(x => x.classList.remove('on')); b.classList.add('on'); drawMatrix(metrics[+b.dataset.i]); });
+  $('#mxTabs').innerHTML = metrics.map(([, l], i) => `<button class="${i ? '' : 'on'}" data-i="${i}">${l}</button>`).join('');
+  $('#mxTabs').querySelectorAll('button').forEach(b => b.onclick = () => { $('#mxTabs').querySelectorAll('button').forEach(x => x.classList.remove('on')); b.classList.add('on'); drawMatrix(metrics[+b.dataset.i]); });
   drawMatrix(metrics[0]);
-  const cell = (r, u) => X.find(x => x.reliance === r && x.upgradeability === u) || {};
-  const hard = cell('sole', 'immutable'), rot = D.curated_by_reliance.find(r => r.reliance === 'key_rotation_only'), alt = D.curated_by_reliance.find(r => r.reliance === 'alternative_exists');
-  const hardRows = D.contracts.filter(r => !r.is_account && r.reliance === 'sole' && r.upgradeability === 'immutable');
-  const sumOf = (rows, k) => rows.reduce((s, r) => s + (r[k] || 0), 0);
-  const hPermit = hardRows.filter(r => r.function === 'user_auth_permit'), hRfq = hardRows.filter(r => r.function === 'operator_signed_quote_rfq');
-  $('#mxText').innerHTML = `The hardest corner is top-left: <strong>${hard.contracts} contracts with no alternative and no way to change</strong>, moving ${fmtUSD(hard.usd_tx_y1)} a year and holding ${fmtUSD(hard.usd_held_now)}. ` +
-    `Almost all the funds held (${fmtUSD(sumOf(hPermit, 'usd_held_now'))}) sit in ${hPermit.length} tokens whose <code>permit</code> only accepts ECDSA, such as wstETH, DAI and USDe. ` +
-    `Most of the value moved (${fmtUSD(sumOf(hRfq, 'usd_tx_y1'))}) goes through ${hRfq.length} trading contracts: UniswapX's cosigner, KyberSwap RFQ, Clipper and AirSwap. ` +
-    `The rest are SNARK verifiers (Tornado Cash, Aztec, Privacy Pools — where funds can only leave through a BN254 proof), passkey verifiers and unidentified executors. ` +
-    `The biggest flows sit one row down: ${rot.contracts} contracts — market makers, bridges, oracles — where keys can be rotated but the signature scheme is fixed (${fmtUSD(rot.usd_tx_y1)} a year). Only ${alt.contracts} offer users a genuine alternative path.`;
 
-  // functions
-  const fsorted = [...D.curated_by_function].filter(r => r.usd_tx_y1 > 1e6).sort((a, b) => b.usd_tx_y1 - a.usd_tx_y1);
+  const apps = D.contracts.filter(r => !r.is_account);
+  const hard = apps.filter(r => r.reliance === 'sole' && r.upgradeability === 'immutable');
+  const hPermit = hard.filter(r => r.function === 'user_auth_permit'), hRfq = hard.filter(r => r.function === 'operator_signed_quote_rfq');
+  const rot = apps.filter(r => r.reliance === 'key_rotation_only');
+  const alt = apps.filter(r => r.reliance === 'alternative_exists');
+  const altLeaky = alt.filter(r => r.ecdsa_order !== 'code_check_first');
+  // distinct-transaction totals (per-contract sums double-count txs that touch several contracts)
+  const relTot = (rel, upg) => upg ? (X.find(x => x.reliance === rel && x.upgradeability === upg) || {}).usd_tx_y1
+                                   : (D.curated_by_reliance.find(x => x.reliance === rel) || {}).usd_tx_y1;
+  $('#mxTakeaways').innerHTML = [
+    ['--sole', hard.length, 'No alternative, can\'t change', `${fmtUSD(relTot('sole', 'immutable'))} a year. ${fmtUSD(sumOf(hPermit, 'usd_held_now'))} of funds sit in ${hPermit.length} ECDSA-only permit tokens (wstETH, DAI, USDe); ${fmtUSD(sumOf(hRfq, 'usd_tx_y1'))} a year flows through ${hRfq.length} trading contracts (UniswapX cosigner, KyberSwap RFQ, Clipper, AirSwap).`],
+    ['--rot', rot.length, 'Keys can rotate, scheme can\'t', `${fmtUSD(relTot('key_rotation_only'))} a year — the largest group. Market makers, bridges, oracles and paymasters, which need new code to accept post-quantum signatures.`],
+    ['--alt', alt.length, 'An alternative exists', `${fmtUSD(relTot('alternative_exists'))} a year. Post-quantum accounts can use these today, but ${altLeaky.length} of them still accept an old ECDSA key for the same address.`],
+  ].map(([c, k, h, t]) => `<div class="take" style="--c: var(${c})"><div class="k num">${k}</div><div class="h">${h}</div><p>${t}</p></div>`).join('');
+
+  // ----- 4 functions
   const domSigner = {};
-  for (const c of D.contracts.filter(c => !c.is_account)) { const k = c.function; domSigner[k] ??= {}; domSigner[k][c.signer] = (domSigner[k][c.signer] || 0) + (c.usd_tx_y1 || 0); }
+  for (const c of apps) { domSigner[c.function] ??= {}; domSigner[c.function][c.signer] = (domSigner[c.function][c.signer] || 0) + (c.usd_tx_y1 || 0); }
   const top = o => Object.entries(o || {}).sort((a, b) => b[1] - a[1])[0]?.[0];
+  const fsorted = D.curated_by_function.filter(r => r.usd_tx_y1 > 5e7).sort((a, b) => b.usd_tx_y1 - a.usd_tx_y1);
   const fmax = fsorted[0].usd_tx_y1;
   $('#funcFig').innerHTML = fsorted.map(r => { const s = SIGNER[top(domSigner[r.function])] || SIGNER.unknown;
     return `<div class="row"><div class="t">${FUNC[r.function] || r.function}<small>${r.contracts} contracts · ${fmtN(r.txs_y1)} transactions</small></div>
       <div class="b" style="width:${Math.max(0.6, 100 * r.usd_tx_y1 / fmax)}%;background:var(${s[1]})"></div><div class="v">${fmtUSD(r.usd_tx_y1)}</div></div>`; }).join('');
-  $('#funcLegend').innerHTML = ['end_user', 'protocol_operator_single_key', 'committee_multisig_threshold', 'prover_proof'].map(k => `<span><i style="background:var(${SIGNER[k][1]})"></i>${SIGNER[k][0]}${k === 'end_user' ? ' signs' : k === 'prover_proof' ? '' : ' key'}</span>`).join('');
+  $('#funcLegend').innerHTML = ['end_user', 'protocol_operator_single_key', 'committee_multisig_threshold', 'prover_proof'].map(k => `<span><i style="background:var(${SIGNER[k][1]})"></i>${SIGNER[k][0]}</span>`).join('');
 
-  // migration
+  // ----- 5 migration
   const O = Object.fromEntries(D.curated_by_ecdsa_order.map(r => [r.ecdsa_order, r]));
   const mig = [
-    ['ecrecover_only', 'Only ECDSA', 'Most permits, quote signers, 0x, Blur', ['bad', 'Locked out', 'can\'t sign at all'], ['bad', 'Still forgeable', 'old key keeps working']],
-    ['ecrecover_first_then_1271', 'ECDSA first, then ERC-1271', 'Seaport, USDS, Pendle, AirSwap', ['good', 'Works', 'via the fallback'], ['bad', 'Still forgeable', 'ECDSA is tried first']],
-    ['signer_selects_scheme', 'Signer picks the scheme', 'CoW, 1inch, Bebop, Safe', ['good', 'Works', 'by choosing ERC-1271'], ['bad', 'Still forgeable', 'an attacker picks ECDSA']],
-    ['code_check_first', 'Account code checked first', 'Permit2, USDC, stETH', ['good', 'Works', 'stETH: 65-byte limit'], ['good', 'Protected', 'once the account has code']],
+    ['ecrecover_only', 'Only ECDSA', 'Most permits, quote signers, 0x, Blur', ['bad', 'Locked out', 'Can\'t sign at all'], ['bad', 'Still forgeable', 'The old key keeps working']],
+    ['ecrecover_first_then_1271', 'ECDSA first, then ERC-1271', 'Seaport, USDS, Pendle, AirSwap', ['good', 'Works', 'Via the ERC-1271 fallback'], ['bad', 'Still forgeable', 'ECDSA is tried first']],
+    ['signer_selects_scheme', 'Signer picks the scheme', 'CoW, 1inch, Bebop, Safe', ['good', 'Works', 'By choosing ERC-1271'], ['bad', 'Still forgeable', 'An attacker picks ECDSA']],
+    ['code_check_first', 'Account code checked first', 'Permit2, USDC, stETH', ['good', 'Works', 'stETH: 65-byte limit'], ['good', 'Protected', 'Once the account has code']],
   ];
-  $('#migTable').innerHTML = `<thead><tr><th>How the contract checks a user's signature</th><th style="text-align:right">Value / year</th><th>New PQ account</th><th>Same address, migrated</th></tr></thead><tbody>` +
-    mig.map(([k, n, ex, a, b]) => `<tr><td>${n}<span class="ex">${ex}</span></td><td class="n">${fmtUSD(O[k]?.usd_tx_y1)}<span class="ex">${O[k]?.contracts} contracts</span></td>
-      <td><span class="verdict ${a[0]}">${a[1]}<small>${a[2]}</small></span></td><td><span class="verdict ${b[0]}">${b[1]}<small>${b[2]}</small></span></td></tr>`).join('') + '</tbody>';
+  $('#migTable').innerHTML = `<thead><tr><th>How the contract checks a user's signature</th><th class="n hide-sm">Value per year</th><th>New post-quantum account</th><th>Same address, migrated</th></tr></thead><tbody>` +
+    mig.map(([k, n, ex, a, b]) => `<tr><td><span class="main">${n}</span><span class="ex">${ex}</span></td><td class="n hide-sm"><span class="main">${fmtUSD(O[k]?.usd_tx_y1)}</span><span class="ex">${O[k]?.contracts} contracts</span></td>
+      <td><span class="verdict ${a[0]}">${a[1]}</span><span class="ex">${a[2]}</span></td><td><span class="verdict ${b[0]}">${b[1]}</span><span class="ex">${b[2]}</span></td></tr>`).join('') + '</tbody>';
 
-  // permit
+  // ----- 6 permit
   const pt = D.permit_tokens_market_cap.filter(r => r.market_cap_usd > 2e8).sort((a, b) => b.market_cap_usd - a.market_cap_usd);
   const pcol = r => r.reliance === 'sole' ? (r.upgradeability === 'immutable' ? '--sole' : '--rot') : '--alt';
   const pmax = pt[0].market_cap_usd;
   $('#permitFig').innerHTML = pt.map(r => `<div class="row"><div class="t">${esc(r.symbol)}<small>${esc(r.protocol.replace(/ \(.*\)/, ''))}</small></div>
-    <div class="b" style="width:${100 * r.market_cap_usd / pmax}%;background:var(${pcol(r)})"></div><div class="v">${fmtUSD(r.market_cap_usd)}</div></div>`).join('');
+    <div class="b" style="width:${Math.max(0.6, 100 * r.market_cap_usd / pmax)}%;background:var(${pcol(r)})"></div><div class="v">${fmtUSD(r.market_cap_usd)}</div></div>`).join('');
   $('#permitLegend').innerHTML = [['--sole', 'ECDSA only, immutable'], ['--rot', 'ECDSA only, upgradeable'], ['--alt', 'Has an ERC-1271 path']].map(([c, n]) => `<span><i style="background:var(${c})"></i>${n}</span>`).join('');
 
-  // rollups
+  // ----- 7 rollups + lattice
   const SV = { 'Validity proofs (SN)': ['SNARK proofs', 'BN254 pairing on L1', '--sole'], 'Validity proofs (ST, SN)': ['STARK wrapped in a SNARK', 'BN254 pairing on L1', '--sole'],
-    'Fraud proofs (1R, ZK)': ['Fraud proofs settled with ZK', 'usually a BN254 SNARK wrapper', '--rot'], 'Validity proofs (ST)': ['STARK proofs', 'hash-based — already quantum-safe', '--alt'],
-    'Fraud proofs (INT)': ['Interactive fraud proofs', 'no curve in the proof path', '--acct'] };
+    'Fraud proofs (1R, ZK)': ['Fraud proofs settled with ZK', 'Usually a BN254 SNARK wrapper', '--rot'], 'Validity proofs (ST)': ['STARK proofs', 'Hash-based, already quantum-safe', '--alt'],
+    'Fraud proofs (INT)': ['Interactive fraud proofs', 'No curve in the proof path', '--acct'] };
   const ro = D.l2_tvs_by_state_validation.filter(r => SV[r.sv]).sort((a, b) => b.total - a.total);
   const rmax = ro[0].total;
   $('#rollupFig').innerHTML = ro.map(r => { const [n, s, c] = SV[r.sv];
-    return `<div class="row"><div class="t">${n}<small>${s}</small></div><div class="b" style="width:${100 * r.total / rmax}%;background:var(${c})"></div><div class="v">${fmtUSD(r.total * 1e9)}</div></div>`; }).join('');
-  $('#latticeText').innerHTML = `The post-quantum side is nearly empty. Scanning every contract deployed since 2023 turned up <strong>${D.lattice_contracts.length} lattice verifiers</strong> — three Falcon, three ML-DSA, all deployed in 2026 — with about a dozen calls between them and no funds behind them.`;
+    return `<div class="row"><div class="t">${n}<small>${s}</small></div><div class="b" style="width:${Math.max(0.6, 100 * r.total / rmax)}%;background:var(${c})"></div><div class="v">${fmtUSD(r.total * 1e9)}</div></div>`; }).join('');
+  $('#latticeN').textContent = D.lattice_contracts.length;
+  $('#latticeText').textContent = `Scanning every contract deployed since 2023 turned up three Falcon and three ML-DSA verifiers, all deployed in 2026, with about a dozen calls between them and no funds behind them.`;
 
-  // explorer
+  // ----- 9 explorer
   const all = D.contracts;
   $('#nAll').textContent = all.length;
-  for (const [id, key, labels] of [['#fRel', 'reliance', Object.fromEntries(Object.entries(REL).map(([k, v]) => [k, v[0]]))], ['#fUpg', 'upgradeability', UPG]])
+  for (const [id, labels] of [['#fRel', Object.fromEntries(Object.entries(REL).map(([k, v]) => [k, v[0]]))], ['#fUpg', UPG]])
     Object.entries(labels).forEach(([k, v]) => $(id).insertAdjacentHTML('beforeend', `<option value="${k}">${v}</option>`));
   let sortKey = 'usd_tx_y1', dir = -1, open = new Set(), showAll = false;
   const COLS = [['protocol', 'Contract'], ['reliance', 'Reliance'], ['upgradeability', 'Code', 'hide-sm'], ['txs_y1', 'Transactions', 'n hide-sm'], ['usd_tx_y1', 'Value / year', 'n'], ['usd_held_now', 'Held', 'n hide-sm']];
   function render() {
     const q = $('#q').value.trim().toLowerCase(), fr = $('#fRel').value, fu = $('#fUpg').value, fk = $('#fKind').value;
-    let list = all.filter(r => (!fk || (fk === 'acct') === r.is_account) && (!fr || r.reliance === fr) && (!fu || r.upgradeability === fu) &&
+    const list = all.filter(r => (!fk || (fk === 'acct') === r.is_account) && (!fr || r.reliance === fr) && (!fu || r.upgradeability === fu) &&
       (!q || [r.address, r.protocol, r.contract_name, r.evidence, r.pq_replacement, FUNC[r.function]].join(' ').toLowerCase().includes(q)));
     list.sort((a, b) => { const x = a[sortKey], y = b[sortKey]; if (x == null) return 1; if (y == null) return -1; return (typeof x === 'number' ? x - y : String(x).localeCompare(String(y))) * dir; });
     $('#exCount').textContent = `${list.length} contract${list.length === 1 ? '' : 's'}`;
-    const shown = showAll || q ? list : list.slice(0, 25);
+    const shown = showAll || q ? list : list.slice(0, 20);
     $('#more').style.display = shown.length < list.length ? '' : 'none';
     $('#more').textContent = `Show all ${list.length}`;
     $('#ext').innerHTML = '<thead><tr>' + COLS.map(([k, t, cls]) => `<th data-k="${k}" class="${cls || ''}">${t}${k === sortKey ? (dir < 0 ? ' ↓' : ' ↑') : ''}</th>`).join('') + '</tr></thead><tbody>' +
@@ -498,11 +541,11 @@ fetch('data.json').then(r => r.json()).then(D => {
     $('#ext').querySelectorAll('th').forEach(th => th.onclick = () => { const k = th.dataset.k; dir = k === sortKey ? -dir : (['txs_y1', 'usd_tx_y1', 'usd_held_now'].includes(k) ? -1 : 1); sortKey = k; render(); });
     $('#ext').querySelectorAll('tr.r').forEach(tr => tr.onclick = () => { const a = tr.dataset.a; open.has(a) ? open.delete(a) : open.add(a); render(); });
   }
-  ['#q'].forEach(s => $(s).oninput = render);
+  $('#q').oninput = render;
   ['#fRel', '#fUpg', '#fKind'].forEach(s => $(s).onchange = render);
   $('#more').onclick = () => { showAll = true; render(); };
   render();
-}).catch(e => document.querySelector('main').insertAdjacentHTML('afterbegin', `<p class="col">Couldn't load the data: ${esc(e)}</p>`));
+}).catch(e => document.querySelector('.hero').insertAdjacentHTML('beforeend', `<p class="note">Couldn't load the data: ${esc(e)}</p>`));
 </script>
 </body>
 </html>
