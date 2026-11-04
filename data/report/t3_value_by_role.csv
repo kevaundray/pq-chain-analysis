@@ -1,0 +1,18 @@
+catgroup,role,mutability,contracts,txs_y1,usd_tx_y1,usd_held_now
+ecrecover,application,immutable,18671,22510661,888917632987.0944,15919056054.752815
+ecrecover,account_contract,owner_controlled,100885,1019589,201200263032.91968,9334324246.574009
+ecrecover,application,upgradeable,2853,6630979,181770905931.6954,17689884116.692642
+ecrecover,account_contract,immutable,21711,1259747,99519614079.6981,1835802539.3759804
+ecrecover,account_7702_eoa,owner_controlled,510639,2052038,17565277251.25678,184084113.01109645
+ecrecover,application,proxy_unresolved,19597,244313,4804031460.9429,2450512.396821858
+ecrecover,account_contract,proxy_unresolved,143,5970,1795555106.5475862,1578714.0070061497
+ecrecover,no_code_now,unclassified,3509,18804,313358546.37877804,129788.14302899127
+ecrecover,account_contract,upgradeable,1,37,,112033807.64118296
+other EC / RSA,application,immutable,415,670565,1729637427.0224233,1983812.4533324984
+other EC / RSA,account_contract,owner_controlled,93161,360884,628727084.78468,3638352.807228735
+other EC / RSA,application,upgradeable,92,487189,625225460.0376432,1208785824.5623608
+other EC / RSA,account_contract,proxy_unresolved,16099,86732,464913196.07086015,89510.5837685343
+other EC / RSA,application,proxy_unresolved,807,1110,800910.6242300688,
+other EC / RSA,account_7702_eoa,owner_controlled,88,343,21183.804878207156,0.029736133028071307
+other EC / RSA,no_code_now,unclassified,24,37,100.78952843740186,0.483418368559558
+other EC / RSA,account_contract,immutable,1,5,,

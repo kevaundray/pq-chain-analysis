@@ -1,0 +1,9 @@
+role,mut,n,eth,usd_bn
+account_contract,owner_controlled,192871,846426.1618484128,1.96
+account_contract,immutable,21707,390445.527822216,0.91
+application,immutable,19104,107816.3895175505,0.25
+account_7702_eoa,owner_controlled,510640,63123.28957959565,0.15
+application,upgradeable,2931,42615.6675346551,0.1
+application,proxy_unresolved,20413,2646.7478766503104,0.01
+other,other,3533,558.8172562926758,0.0
+account_contract,proxy_unresolved,16244,166.82654033308526,0.0

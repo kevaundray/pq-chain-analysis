@@ -1,0 +1,9 @@
+sv,total,canonical
+"Fraud proofs (1R, ZK)",15.26,2.8
+Fraud proofs (INT),14.61,5.51
+None,4.94,2.82
+"Validity proofs (ST, SN)",1.62,0.81
+Validity proofs (SN),1.39,1.17
+Validity proofs (ST),0.37,0.27
+Validity proofs,0.01,0.01
+TEE attestations,0.0,0.0
