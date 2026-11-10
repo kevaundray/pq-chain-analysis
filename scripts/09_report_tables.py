@@ -13,36 +13,15 @@ Roles/mutability: rule-based per code family (07_classify.py), overridden by cur
 import glob
 import json
 import os
+import sys
 
 import duckdb
 import pandas as pd
 
-OUT = "data/report"
-Y1 = "data/agg/y1_caller.parquet"
-AT = "data/agg/alltime_caller.parquet"
-TXC = "data/agg/y1_tx_caller.parquet"
-M = "data/agg/modexp_moduli.parquet"
+sys.path.insert(0, "scripts")
+from pqdefs import CAT_ORDER, base_tables  # noqa: E402
 
-PRECOMPILE_CAT = """CASE WHEN precompile_name='ecrecover' THEN 'ecrecover'
- WHEN precompile_name IN ('ecadd','ecmul','ecpairing') THEN 'bn254'
- WHEN precompile_name='pointEval' THEN 'kzg'
- WHEN precompile_name LIKE 'bls12%' THEN 'bls12381'
- WHEN precompile_name='p256verify' THEN 'p256' END"""
-MOD_CLASS = """CASE
- WHEN mod_len >= 128 THEN 'rsa'
- WHEN modulus IN ('ffffffff00000001000000000000000000000000ffffffffffffffffffffffff',
-                  'ffffffff00000000ffffffffffffffffbce6faada7179e84f3b9cac2fc632551') THEN 'sw_p256'
- WHEN modulus IN ('fffffffffffffffffffffffffffffffffffffffffffffffffffffffefffffc2f',
-                  'fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141') THEN 'sw_secp256k1'
- WHEN modulus IN ('30644e72e131a029b85045b68181585d97816a916871ca8d3c208c16d87cfd47',
-                  '30644e72e131a029b85045b68181585d2833e84879b9709143e1f593f0000001') THEN 'sw_bn254'
- WHEN modulus IN ('7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffed',
-                  '1000000000000000000000000000000014def9dea2f79cd65812631a5cf5d3ed') THEN 'sw_ed25519'
- WHEN modulus LIKE '%1a0111ea397fe69a4b1ba7b6434bacd7%'
-   OR modulus = '73eda753299d7d483339d80809a1d80553bda402fffe5bfeffffffff00000001' THEN 'sw_bls12381'
- ELSE NULL END"""
-CAT_ORDER = ["ecrecover", "bn254", "bls12381", "kzg", "p256", "sw_p256", "sw_secp256k1", "sw_bn254", "sw_ed25519",
-             "sw_bls12381", "rsa"]
+OUT = "data/report"
 GROUP = {"ecrecover": "1. ecrecover", **{k: "2. EC precompile" for k in ("bn254", "bls12381", "kzg", "p256")},
          **{k: "3. EC in software" for k in ("sw_p256", "sw_secp256k1", "sw_bn254", "sw_ed25519", "sw_bls12381")},
          "rsa": "4. RSA"}
@@ -71,17 +50,7 @@ def main():
         return c.execute(q).fetchall()[0][0]
 
     # ---------- base tables ----------
-    c.sql(f"""CREATE TABLE modcls AS SELECT caller, {MOD_CLASS} cls, sum(calls) calls, sum(calls_y1) calls_y1
-              FROM '{M}' GROUP BY ALL HAVING cls IS NOT NULL""")
-    c.sql("CREATE TABLE mdom AS SELECT caller, arg_max(cls, calls_y1) cls FROM modcls WHERE calls_y1 > 0 GROUP BY 1")
-    c.sql(f"""CREATE TABLE cat_all AS
-      SELECT DISTINCT caller, {PRECOMPILE_CAT} cat FROM '{AT}' WHERE {PRECOMPILE_CAT} IS NOT NULL
-      UNION SELECT DISTINCT caller, cls FROM modcls""")
-    c.sql(f"""CREATE TABLE txcat AS
-      SELECT DISTINCT t.tx_hash, t.block_number, t.caller, coalesce({PRECOMPILE_CAT}, m.cls) cat
-      FROM '{TXC}' t LEFT JOIN mdom m ON t.precompile_name = 'modexp' AND m.caller = t.caller
-      WHERE {PRECOMPILE_CAT} IS NOT NULL OR (t.precompile_name = 'modexp' AND m.cls IS NOT NULL)""")
-    c.sql("CREATE TABLE ycat AS SELECT caller, cat, count(DISTINCT tx_hash) txs FROM txcat GROUP BY ALL")
+    base_tables(c)
     c.sql(f"""CREATE TABLE ft AS SELECT tx_hash::VARCHAR tx_hash, tx_max_usd FROM 'data/flows_tx.parquet'""")
     c.sql(f"""CREATE TABLE stx AS SELECT DISTINCT t.tx_hash, t.caller, t.cat, ft.tx_max_usd
               FROM txcat t JOIN ft USING (tx_hash) WHERE t.block_number // 1000 IN ({plist})""")
@@ -162,7 +131,7 @@ def main():
              WHERE cls.role = 'application'""")
     per = group_metrics("SELECT address caller, address addr FROM curapps", ["addr"])
     curm = cur.merge(per.drop(columns="contracts").rename(columns={"addr": "address"}), on="address", how="left")
-    curm = curm.merge(c.sql("SELECT caller address, string_agg(cat || ':' || txs, ' ' ORDER BY txs DESC) cats FROM ycat GROUP BY 1").df(),
+    curm = curm.merge(c.sql("SELECT caller address, string_agg(cat || ':' || txs, ' ' ORDER BY txs DESC, cat) cats FROM ycat GROUP BY 1").df(),
                       on="address", how="left")
     curm.to_csv(f"{OUT}/curated_contracts.csv", index=False)
 

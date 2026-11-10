@@ -47,13 +47,80 @@ p { margin: 0; }
 .masthead nav a { text-decoration: none; margin-left: var(--s5); }
 .masthead nav a:hover { color: var(--ink); }
 
-/* ---------- hero ---------- */
-.hero { padding: var(--s9) 0 var(--s8); }
+/* ---------- hero / lookup ---------- */
+.hero { padding: var(--s9) 0 var(--s6); }
 .eyebrow { font-size: 12px; letter-spacing: .1em; text-transform: uppercase; font-weight: 600; color: var(--muted); margin: 0 0 var(--s4); }
 .hero .eyebrow { color: var(--sole); }
-h1 { font: 500 clamp(38px, 5.6vw, 64px)/1.04 var(--serif); letter-spacing: -.02em; margin: 0 0 var(--s5); max-width: 860px; }
-.dek { font: 400 clamp(19px, 2vw, 22px)/1.5 var(--serif); color: var(--ink2); max-width: var(--prose); margin: 0 0 var(--s4); }
+h1 { font: 500 clamp(34px, 4.8vw, 56px)/1.06 var(--serif); letter-spacing: -.02em; margin: 0 0 var(--s4); max-width: 820px; }
+.display { font: 500 clamp(32px, 4.4vw, 52px)/1.08 var(--serif); letter-spacing: -.02em; margin: 0 0 var(--s5); max-width: 860px; }
+.dek { font: 400 clamp(18px, 1.9vw, 21px)/1.5 var(--serif); color: var(--ink2); max-width: var(--prose); margin: 0 0 var(--s4); }
 .byline { font-size: 13px; color: var(--muted); }
+
+.search { position: relative; display: flex; gap: var(--s2); margin-top: var(--s6); max-width: 780px; }
+.search input { flex: 1; min-width: 0; height: 58px; padding: 0 var(--s5); font: 400 15.5px/1 ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--ink); background: var(--paper); border: 1.5px solid var(--ink); border-radius: 12px; }
+.search input::placeholder { font-family: var(--sans); font-size: 16px; color: var(--muted); }
+.search input:focus { outline: none; box-shadow: 0 0 0 4px color-mix(in srgb, var(--ink) 12%, transparent); }
+.search > button { height: 58px; padding: 0 var(--s6); border: 0; border-radius: 12px; background: var(--ink); color: var(--paper); font: 600 15px var(--sans); cursor: pointer; }
+.search > button:hover { opacity: .88; }
+.suggest { position: absolute; left: 0; right: 0; top: 66px; z-index: 5; background: var(--paper); border: 1px solid var(--rule2); border-radius: 12px; box-shadow: 0 16px 40px rgba(0,0,0,.10); overflow: hidden; }
+.suggest button { display: flex; justify-content: space-between; align-items: baseline; gap: var(--s4); width: 100%; text-align: left; padding: var(--s3) var(--s5); background: none; border: 0; border-bottom: 1px solid var(--rule); font: inherit; font-size: 14.5px; color: var(--ink); cursor: pointer; }
+.suggest button:last-child { border-bottom: 0; }
+.suggest button:hover, .suggest button.on { background: var(--tint); }
+.suggest small { color: var(--muted); font-size: 12.5px; white-space: nowrap; }
+.examples { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2); margin-top: var(--s4); font-size: 13.5px; color: var(--muted); }
+.examples span { margin-right: var(--s1); }
+.examples button { font: inherit; font-size: 13px; color: var(--ink2); background: var(--tint); border: 1px solid var(--rule); border-radius: 999px; padding: 4px 12px; cursor: pointer; }
+.examples button:hover { border-color: var(--ink); color: var(--ink); }
+
+.result { margin-top: var(--s6); border: 1px solid var(--rule2); border-radius: 16px; padding: var(--s7) var(--s7) var(--s6); }
+.result[hidden] { display: none; }
+.r-loading { color: var(--muted); font-size: 15px; }
+.r-head { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--s5); }
+.r-name { font: 500 28px/1.2 var(--serif); letter-spacing: -.01em; }
+.r-addr { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px; color: var(--muted); margin-top: var(--s1); word-break: break-all; }
+.r-links { display: flex; gap: var(--s4); font-size: 13px; white-space: nowrap; padding-top: var(--s2); }
+.r-links a, .r-links button { color: var(--ink2); background: none; border: 0; padding: 0; font: inherit; cursor: pointer; text-decoration: underline; text-decoration-color: var(--rule2); text-underline-offset: 3px; }
+.r-verdict { margin-top: var(--s6); padding: var(--s1) 0 var(--s1) var(--s5); border-left: 4px solid var(--c); }
+.r-verdict .t { font: 500 24px/1.25 var(--serif); color: var(--c); }
+.r-verdict .s { font-size: 15px; color: var(--ink2); margin-top: var(--s2); max-width: var(--prose); }
+.r-facts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--s5); margin-top: var(--s6); }
+.r-facts > div { border-top: 1px solid var(--rule); padding-top: var(--s3); }
+.r-facts .k { font-size: 12px; color: var(--muted); margin-bottom: var(--s1); }
+.r-facts .v { font-size: 16px; font-weight: 500; line-height: 1.35; }
+.r-facts .v small { display: block; font-weight: 400; font-size: 12.5px; color: var(--muted); margin-top: 2px; }
+.r-sec { margin-top: var(--s7); }
+.r-sec h3 { font-size: 12px; letter-spacing: .1em; text-transform: uppercase; font-weight: 600; color: var(--muted); margin: 0 0 var(--s3); padding-bottom: var(--s2); border-bottom: 1px solid var(--ink); }
+.r-sec .note { margin-top: var(--s3); }
+.r-use { width: 100%; border-collapse: collapse; font-size: 14px; }
+.r-use th { text-align: right; font-size: 12px; font-weight: 500; color: var(--muted); padding: 0 0 var(--s2) var(--s4); white-space: nowrap; }
+.r-use th:first-child { text-align: left; padding-left: 0; }
+.r-use td { padding: var(--s3) 0 var(--s3) var(--s4); border-top: 1px solid var(--rule); vertical-align: top; }
+.r-use td:first-child { padding-left: 0; }
+.r-use td.n { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.r-use .what { display: block; font-size: 12.5px; color: var(--muted); margin-top: 1px; }
+.r-dl { display: grid; grid-template-columns: 210px minmax(0, 1fr); gap: var(--s3) var(--s5); margin: 0; font-size: 14.5px; }
+.r-dl dt { color: var(--muted); }
+.r-dl dd { margin: 0; color: var(--ink); word-break: break-word; }
+.r-dl dd .sub { display: block; color: var(--muted); font-size: 13px; margin-top: 2px; }
+.r-checks { list-style: none; margin: 0; padding: 0; }
+.r-checks li { display: grid; grid-template-columns: 22px minmax(0, 1fr) auto; gap: var(--s3); align-items: baseline; padding: var(--s3) 0; border-top: 1px solid var(--rule); font-size: 14.5px; }
+.r-checks li:first-child { border-top: 0; padding-top: 0; }
+.r-checks .i { font-weight: 700; text-align: center; }
+.r-checks .i.y { color: var(--sole); } .r-checks .i.g { color: var(--alt); } .r-checks .i.n { color: var(--muted); }
+.r-checks .d { color: var(--muted); font-size: 13px; text-align: right; }
+.r-checks a, .r-dl a, .r-means a { cursor: pointer; }
+.r-means { margin: 0; padding-left: 20px; }
+.r-means li { font-size: 15px; line-height: 1.55; color: var(--ink2); margin-bottom: var(--s3); max-width: 760px; }
+.r-means li:last-child { margin-bottom: 0; }
+.r-means strong { color: var(--ink); font-weight: 600; }
+@media (max-width: 720px) {
+  .result { padding: var(--s5); border-radius: 12px; }
+  .search > button { padding: 0 var(--s4); }
+  .r-head { flex-direction: column; gap: var(--s2); }
+  .r-facts { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s4); }
+  .r-dl { grid-template-columns: 1fr; gap: 2px; } .r-dl dd { margin-bottom: var(--s3); }
+  .r-use .hide-sm { display: none; }
+}
 
 .headline-stat { margin: var(--s8) 0 0; padding: var(--s6) 0 0; border-top: 2px solid var(--ink); display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s6) var(--s6); }
 .headline-stat .big { grid-column: 1 / -1; max-width: 860px; margin-bottom: var(--s2); }
@@ -179,17 +246,14 @@ h2 { font: 500 clamp(28px, 3.2vw, 36px)/1.15 var(--serif); letter-spacing: -.015
 .ext td.n { white-space: nowrap; }
 .ext tr.r { cursor: pointer; }
 .ext tr.r:hover td { background: var(--tint); }
+.ext tr.r:hover .p { text-decoration: underline; text-underline-offset: 3px; }
 .ext .p { font-weight: 500; }
 .ext .f { display: block; font-size: 12.5px; color: var(--muted); margin-top: 2px; }
 .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: var(--s2); vertical-align: 1px; }
-.ext tr.d td { background: var(--tint); padding: var(--s5); }
-.ext tr.d dl { display: grid; grid-template-columns: 170px minmax(0, 1fr); gap: var(--s2) var(--s5); margin: 0; font-size: 13.5px; }
-.ext tr.d dt { color: var(--muted); }
-.ext tr.d dd { margin: 0; word-break: break-word; color: var(--ink2); }
 .mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12.5px; }
 .more { display: block; margin: var(--s5) auto 0; font: inherit; font-size: 14px; background: none; border: 1px solid var(--rule2); border-radius: 6px; padding: 9px 20px; color: var(--ink); cursor: pointer; }
 .more:hover { border-color: var(--ink); }
-@media (max-width: 720px) { .ext .hide-sm { display: none; } .ext tr.d dl { grid-template-columns: 1fr; } .ex-count { width: 100%; margin-left: 0; } }
+@media (max-width: 720px) { .ext .hide-sm { display: none; } .ex-count { width: 100%; margin-left: 0; } }
 
 /* ---------- method ---------- */
 .defs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s6) var(--s7); margin: var(--s6) 0 0; }
@@ -205,13 +269,26 @@ footer { margin-top: var(--s10); border-top: 1px solid var(--rule); padding: var
 <div class="container">
   <div class="masthead"><span>Ethereum · post-quantum migration</span><nav><a href="https://github.com/kevaundray/pq-chain-analysis/blob/main/REPORT.md">Full report</a><a href="https://github.com/kevaundray/pq-chain-analysis">Data &amp; code</a></nav></div>
 
-  <header class="hero">
-    <p class="eyebrow">A census of Ethereum mainnet</p>
-    <h1>Your account can go post&#8209;quantum. The contracts you use mostly can't.</h1>
+  <header class="hero" id="check">
+    <p class="eyebrow">Post-quantum readiness check</p>
+    <h1>Does this contract depend on quantum&#8209;breakable cryptography?</h1>
+    <p class="dek">Enter an Ethereum mainnet address to see whether it verifies ECDSA, elliptic-curve or RSA signatures and proofs, how much it's used, and whether it can change.</p>
+    <form class="search" id="lkForm" autocomplete="off" role="search">
+      <input id="lkInput" type="search" spellcheck="false" placeholder="Contract or account address (0x…), or a protocol name" aria-label="Address or protocol name">
+      <button type="submit">Check</button>
+      <div class="suggest" id="lkSuggest" hidden></div>
+    </form>
+    <div class="examples" id="lkExamples"><span>Try</span></div>
+    <section class="result" id="result" hidden aria-live="polite"></section>
+  </header>
+
+  <section class="block">
+    <p class="eyebrow">The big picture</p>
+    <h2 class="display">Your account can go post&#8209;quantum. The contracts you use mostly can't.</h2>
     <p class="dek">Frame transactions (EIP-8141) are designed to let users switch to quantum-safe signatures. But every permit, signed order, bridge attestation and rollup proof is checked by a contract — and those contracts still verify cryptography a quantum computer can break.</p>
     <p class="byline">Usage March 2025 – March 2026 · contract state and balances November 2026</p>
     <div class="headline-stat" id="headline"></div>
-  </header>
+  </section>
 
   <!-- 1 -->
   <section class="block">
@@ -323,7 +400,7 @@ footer { margin-top: var(--s10); border-top: 1px solid var(--rule); padding: var
   <section class="block" id="browse">
     <p class="eyebrow">The data</p>
     <h2>Browse the contracts</h2>
-    <p class="lede">All <span id="nAll"></span> contracts we classified by hand. Select a row for the evidence, who controls upgrades, and a suggested post-quantum path.</p>
+    <p class="lede">All <span id="nAll"></span> contracts we classified by hand. Select one to open it in the checker at the top of the page.</p>
     <div class="fig">
       <div class="filters">
         <input id="q" placeholder="Search protocol, address or mechanism" aria-label="Search">
@@ -380,7 +457,345 @@ const FUNC = {
 };
 const SIGNER = { end_user: ['User signs', '--ink'], protocol_operator_single_key: ['Operator key', '--rot'], committee_multisig_threshold: ['Committee', '--ver'], prover_proof: ['Proof', '--alt'], mixed: ['Mixed', '--muted'], unknown: ['Unknown', '--muted'] };
 
-fetch('data.json').then(r => r.json()).then(D => {
+const dataP = fetch('data.json').then(r => r.json());
+
+// ======================= lookup =======================
+const ADDR_RE = /^(0x)?[0-9a-fA-F]{40}$/;
+const RPCS = ['https://ethereum-rpc.publicnode.com', 'https://eth.drpc.org', 'https://1rpc.io/eth', 'https://rpc.mevblocker.io'];
+const SLOT = {
+  impl: '0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc',
+  admin: '0xb53127684a568b3173ae13b9f8a6016e243e63b6e8ee1178d6a717850b5d6103',
+  beacon: '0xa3f0ad74e5423aebfd80d3ef4346578335a9a72aeaee59ff6cb3582b35133d50',
+  zos: '0x7050c9e0f4ca769c69bd3a8ef740bc37934f8e2c036e5a723fd8ee048ed3f8c3',
+};
+const CATINFO = {
+  e: ['ecrecover', 'secp256k1 ECDSA signature recovery'], b: ['BN254 precompiles', 'SNARK proofs, BLS on BN254'],
+  k: ['KZG point evaluation', 'Blob commitment openings'], l: ['BLS12-381 precompiles', 'BLS signatures'],
+  p: ['P-256 precompile', 'Passkey / WebAuthn signatures'], sp: ['P-256 in software', 'Passkey verification without the precompile'],
+  sk: ['secp256k1 in software', 'Curve maths for VRFs and Schnorr'], sb: ['BN254 in software', 'Field maths inside SNARK verifiers'],
+  se: ['ed25519 in software', 'Edwards-curve signatures'], sl: ['BLS12-381 in software', 'BLS maths without the precompile'],
+  r: ['RSA', 'Email (DKIM) and identity signatures'],
+};
+const ROLE_L = { a: 'Application', w: 'Contract wallet', d: 'EOA with EIP-7702 code', n: 'No code now', '?': 'Contract' };
+const MUT_L = { i: 'Immutable', u: 'Upgradeable', o: 'Owners can change it', x: 'Proxy, target unresolved', '?': '—' };
+const PROXY_L = { eip1967: 'Upgradeable proxy (EIP-1967)', beacon: 'Beacon proxy', zos: 'Upgradeable proxy', eip1167: 'Minimal clone (EIP-1167)', safe_proxy: 'Safe proxy', eip7702: 'EIP-7702 delegation' };
+const ORDER_MEANS = {
+  ecrecover_only: ['A <strong>new post-quantum account can\'t use it</strong>: it only accepts ECDSA signatures.', 'A user who <strong>keeps their address</strong> but switches to post-quantum keys is <strong>still forgeable</strong> here: the old ECDSA key keeps working.'],
+  ecrecover_first_then_1271: ['New post-quantum accounts <strong>can</strong> sign, through the ERC-1271 fallback.', 'For a migrated address, ECDSA is tried first, so the <strong>old key keeps working</strong> unless EIP-8151 ships.'],
+  signer_selects_scheme: ['New post-quantum accounts <strong>can</strong> sign by choosing the ERC-1271 scheme.', 'For a migrated address the old key <strong>still works</strong>: an attacker simply picks the ECDSA scheme.'],
+  code_check_first: ['New post-quantum accounts <strong>can</strong> sign: accounts with code are checked through ERC-1271.', 'A migrated address is <strong>protected</strong> once it has real account code.'],
+};
+
+const getJSON = u => fetch(u).then(r => r.ok ? r.json() : null);
+const LK = { meta: null, fams: null, shards: new Map(), token: 0 };
+const lkMeta = () => (LK.meta ??= getJSON('lookup/meta.json'));
+const lkFams = () => (LK.fams ??= getJSON('lookup/families.json'));
+function lkRecord(a) {
+  const s = a.slice(2, 5);
+  if (!LK.shards.has(s)) LK.shards.set(s, getJSON(`lookup/${s}.json`).then(d => d || {}));
+  return LK.shards.get(s).then(d => d[a.slice(5)] || null);
+}
+function blockTime(meta, b) {
+  const A = meta.anchors; let lo = 0, hi = A.length - 1;
+  if (b >= A[hi][0]) return A[hi][1] + (b - A[hi][0]) * 12;
+  while (hi - lo > 1) { const m = (lo + hi) >> 1; if (A[m][0] <= b) lo = m; else hi = m; }
+  const [b0, t0] = A[lo], [b1, t1] = A[hi];
+  return t0 + (t1 - t0) * (b - b0) / (b1 - b0);
+}
+const fmtDate = (meta, b) => new Date(blockTime(meta, b) * 1000).toLocaleDateString('en-GB', { month: 'short', year: 'numeric' });
+function busierThan(meta, t) {
+  const q = meta.t_quantiles; let i = 0;
+  while (i < q.length && q[i] < t) i++;
+  return Math.min(99, Math.max(0, Math.round(100 * (i - 1) / (q.length - 1))));
+}
+const short = a => a.slice(0, 6) + '…' + a.slice(-4);
+const addrLink = a => `<a class="mono" data-lookup="${a}" title="Check ${a}">${short(a)}</a>`;
+
+async function rpc(calls) {
+  const body = JSON.stringify(calls.map(([method, params], id) => ({ jsonrpc: '2.0', id, method, params })));
+  for (const url of RPCS) {
+    try {
+      const ctrl = new AbortController(), timer = setTimeout(() => ctrl.abort(), 8000);
+      const r = await fetch(url, { method: 'POST', headers: { 'content-type': 'application/json' }, body, signal: ctrl.signal });
+      clearTimeout(timer);
+      const j = await r.json();
+      if (!Array.isArray(j)) continue;
+      const out = new Array(calls.length);
+      for (const o of j) out[o.id] = o.result;
+      if (out.every(x => typeof x === 'string')) return out;
+    } catch (e) { /* try the next endpoint */ }
+  }
+  throw new Error('no public RPC endpoint answered');
+}
+const slotAddr = w => (!w || !/^0x[0-9a-f]+$/i.test(w) || BigInt(w) === 0n || (BigInt(w) >> 160n) !== 0n) ? null : '0x' + w.slice(-40).toLowerCase();
+
+const FP = {
+  ecdsa: ['7fffffffffffffffffffffffffffffff5d576e7357a4501ddfe92f46681b20a0', 'fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141'],
+  bn254: ['30644e72e131a029b85045b68181585d97816a916871ca8d3c208c16d87cfd47', '30644e72e131a029b85045b68181585d2833e84879b9709143e1f593f0000001'],
+  p256: ['ffffffff00000000ffffffffffffffffbce6faada7179e84f3b9cac2fc632551', 'ffffffff00000001000000000000000000000000ffffffffffffffffffffffff'],
+  bls: ['73eda753299d7d483339d80809a1d80553bda402fffe5bfeffffffff00000001', '1a0111ea397fe69a4b1ba7b6434bacd7'],
+  lattice: ['16e40c7b04bc29930e25261022510dd61fdb166802d22ae80fcb1be72a3a0001', '222b0db009f121dc066e2b452386191d05192d2f19991026141a203605c70001', '003965690039756700495e0200000001'],
+};
+function codeFeatures(hexes) {
+  const hs = hexes.filter(Boolean).map(x => x.slice(2).toLowerCase());
+  const has = s => hs.some(h => { for (let i = h.indexOf(s); i !== -1; i = h.indexOf(s, i + 1)) if (i % 2 === 0) return true; return false; });
+  // selectors appear as PUSH4 or left-aligned in a PUSH32; a stray 4-byte match in contract code is negligible
+  const any = list => list.some(has), sel = has;
+  return {
+    erc1271: sel('1626ba7e') || sel('20c13b0b'), permit: sel('d505accf') || sel('8fcbaf0c'), auth3009: sel('e3ee160e') || sel('ef55bec6'),
+    upgrade: sel('3659cfe6') || sel('4f1ef286'), ecdsa: any(FP.ecdsa), bn254: any(FP.bn254), p256: any(FP.p256), bls: any(FP.bls), lattice: any(FP.lattice),
+  };
+}
+
+async function liveCheck(a) {
+  const [code, bal, impl, admin, beacon, zos, slot0] = await rpc([
+    ['eth_getCode', [a, 'latest']], ['eth_getBalance', [a, 'latest']],
+    ['eth_getStorageAt', [a, SLOT.impl, 'latest']], ['eth_getStorageAt', [a, SLOT.admin, 'latest']],
+    ['eth_getStorageAt', [a, SLOT.beacon, 'latest']], ['eth_getStorageAt', [a, SLOT.zos, 'latest']],
+    ['eth_getStorageAt', [a, '0x0', 'latest']]]);
+  const h = code.toLowerCase(), L = { size: (h.length - 2) / 2, eth: Number(BigInt(bal)) / 1e18 };
+  if (h.startsWith('0xef0100') && L.size === 23) { L.kind = 'eip7702'; L.target = '0x' + h.slice(8, 48); }
+  else if (h.startsWith('0x363d3d373d3d3d363d73')) { L.kind = 'eip1167'; L.target = '0x' + h.slice(22, 62); }
+  else if (slotAddr(impl)) { L.kind = 'eip1967'; L.target = slotAddr(impl); L.admin = slotAddr(admin); }
+  else if (slotAddr(beacon)) { L.kind = 'beacon'; L.beacon = slotAddr(beacon); }
+  else if (slotAddr(zos)) { L.kind = 'zos'; L.target = slotAddr(zos); }
+  else if (L.size > 0 && L.size < 1500 && h.includes('a619486e') && slotAddr(slot0)) { L.kind = 'safe_proxy'; L.target = slotAddr(slot0); }
+  else L.kind = L.size ? 'none' : 'eoa';
+  const codes = [h];
+  try {
+    if (L.kind === 'beacon') L.target = slotAddr((await rpc([['eth_call', [{ to: L.beacon, data: '0x5c60da1b' }, 'latest']]]))[0]);
+    if (L.target) {
+      const [tc, ti] = await rpc([['eth_getCode', [L.target, 'latest']], ['eth_getStorageAt', [L.target, SLOT.impl, 'latest']]]);
+      codes.push(tc);
+      if ((L.kind === 'eip7702' || L.kind === 'eip1167') && slotAddr(ti)) { L.inner = slotAddr(ti); codes.push((await rpc([['eth_getCode', [L.inner, 'latest']]]))[0]); }
+    }
+  } catch (e) { L.partial = true; }
+  L.feat = codeFeatures(codes);
+  return L;
+}
+
+function verdict(meta, rec, fam, cur, live) {
+  const role = fam?.[0];
+  if (cur && !cur.is_account) {
+    const R = { sole: ['--sole', 'No alternative to the pre-quantum check'], key_rotation_only: ['--rot', 'Keys can rotate, but the signature scheme is fixed'],
+                alternative_exists: ['--alt', 'An alternative path exists'], configurable_verifier: ['--ver', 'The verifier can be swapped'] }[cur.reliance] || ['--ink', 'Classified'];
+    return [R[0], R[1], `${FUNC[cur.function] || 'Other'} · ${UPG[cur.upgradeability] || '—'}. Classified by reading its code.`];
+  }
+  if (cur?.is_account) return ['--rot', 'A smart-contract wallet', `Owners authorise it with ${cur.reliance === 'sole' ? 'ECDSA keys only' : 'signatures that include ECDSA'}. ${UPG[cur.upgradeability] || ''}.`];
+  if (live?.kind === 'eip7702' || role === 'd') return ['--rot', 'An EOA with EIP-7702 delegated code', `Its original ECDSA key still controls it and can change the delegation at any time.${fam?.[5] ? ` It delegates to ${esc(fam[5])}.` : ''}`];
+  if (rec?.im && (!rec.t || rec.im[2] > rec.t)) return ['--ink', `The code behind ${fmtN(rec.im[1])} contract${rec.im[1] === 1 ? '' : 's'} that use pre-quantum cryptography`, `Contracts running this implementation made ${fmtN(rec.im[2])} such transactions in the year to March 2026.`];
+  if (rec?.u) {
+    const u = rec.u, cats = Object.keys(u).sort((x, y) => (u[y][0] - u[x][0]) || (u[y][1] - u[x][1]));
+    const last = Math.max(...cats.map(k => u[k][3]));
+    const names = cats.slice(0, 2).map(k => CATINFO[k][0]).join(' and ') + (cats.length > 2 ? ` and ${cats.length - 2} more` : '');
+    const gone = live?.kind === 'eoa' ? ' It has no code today.' : '';
+    return ['--ink', `Uses ${names}`, (rec.t ? `${fmtN(rec.t)} transaction${rec.t === 1 ? '' : 's'} in the year to March 2026.` : `Last used ${fmtDate(meta, last)}; not active in the year to March 2026.`) + gone];
+  }
+  if (live?.feat?.lattice) return ['--alt', 'A post-quantum (lattice) signature verifier', 'Its code contains Falcon or ML-DSA tables, and we saw it make no pre-quantum precompile calls.'];
+  if (live?.kind === 'eoa') return ['--rot', 'A regular account (EOA)', 'Controlled by a secp256k1 ECDSA key. As an account it made no pre-quantum precompile calls of its own.'];
+  if (live?.error) return ['--muted', 'Not in our data', 'It made no pre-quantum precompile calls we observed, and the chain couldn\'t be reached to check its current code.'];
+  return ['--alt', 'No pre-quantum cryptography observed', 'This contract made no calls to ecrecover, curve or RSA precompiles between late 2016 and March 2026.'];
+}
+
+function meanings(rec, fam, cur, live, f) {
+  const out = [], role = fam?.[0], u = rec?.u || {};
+  if (cur && !cur.is_account) {
+    if (ORDER_MEANS[cur.ecdsa_order] && cur.signer === 'end_user') out.push(...ORDER_MEANS[cur.ecdsa_order]);
+    else if (cur.signer === 'protocol_operator_single_key') out.push('The key that matters belongs to the <strong>operator</strong>, not the user. A user switching to a post-quantum account changes nothing here; the operator has to ship new code.');
+    else if (cur.signer === 'committee_multisig_threshold') out.push('Security rests on a <strong>committee\'s ECDSA or BLS keys</strong>. Moving to post-quantum signatures needs new verification code, not just new keys.');
+    else if (cur.signer === 'prover_proof') out.push('It verifies <strong>proofs over elliptic-curve pairings</strong>. The quantum-safe replacement is a hash-based (STARK) verifier, at several times the gas.');
+    out.push({ immutable: 'Its <strong>code can\'t change</strong>, so a fix means a replacement contract, or protocol-level protection such as EIP-8151.',
+      immutable_logic_configurable_params: 'Its code is fixed, but an admin can change its <strong>keys, signers or verifier address</strong>.',
+      upgradeable_proxy_admin: 'It sits behind an <strong>upgradeable proxy</strong>, so its admin can change how it verifies signatures.' }[cur.upgradeability] || '');
+    if (cur.pq_replacement) out.push(`<strong>Suggested path:</strong> ${esc(cur.pq_replacement)}`);
+  } else if (cur?.is_account || role === 'w') {
+    out.push('Wallet owners can usually move to post-quantum signers — by adding an ERC-1271 owner contract or upgrading — but immutable wallets (such as BitGo\'s WalletSimple) need their funds moved.');
+  } else if (live?.kind === 'eip7702' || role === 'd') {
+    out.push('The account\'s <strong>ECDSA key remains in charge</strong>: it can sign transactions and re-delegate. Going fully post-quantum means converting to real account code (EIP-8141 or EIP-8298).');
+    out.push('EIP-8151, which disables <code>ecrecover</code> for migrated accounts, deliberately still accepts delegated EOAs.');
+  } else if (live?.kind === 'eoa' && !rec) {
+    out.push('Every EOA is controlled by a secp256k1 key. Once it has sent a transaction its public key is on-chain, which is what a quantum attacker would need.');
+    out.push('The fix is moving to a post-quantum account. Permits and approvals this address has signed are governed by the contracts that check them — look those up too.');
+  } else if (rec?.u) {
+    if (u.e) out.push('<code>ecrecover</code> usually checks a signature from a user or an operator. We haven\'t classified this contract by hand; the code check above shows whether it also accepts ERC-1271 contract signatures, the path post-quantum accounts can use.');
+    if (u.b || u.sb) out.push('BN254 pairing checks mean it verifies <strong>SNARK proofs or BLS signatures</strong>. The quantum-safe replacement is a hash-based (STARK/FRI) verifier, at several times the gas.');
+    if (u.k) out.push('KZG point evaluation opens <strong>blob commitments</strong>. That depends on Ethereum itself moving to post-quantum data availability.');
+    if (u.p || u.sp) out.push('P-256 is used for <strong>passkeys</strong>. Post-quantum (ML-DSA) passkeys exist but cost about 1.2M gas to verify without a precompile.');
+    if (u.l || u.sl) out.push('BLS signatures; the replacement is hash-based signatures aggregated inside a STARK.');
+    if (u.r) out.push('RSA here usually verifies email (DKIM) or identity signatures; the issuers have to move to post-quantum keys first.');
+    if (fam) out.push({ i: 'Its code is <strong>immutable</strong>.', u: 'It sits behind an <strong>upgradeable proxy</strong>, so its admin can change how it verifies.', x: 'It forwards calls to code we couldn\'t resolve.' }[fam[1]] || '');
+  } else if (rec?.im) {
+    out.push('Contracts that run this code can only change how they verify signatures if they are upgradeable or let owners switch implementation.');
+  } else if (f) {
+    out.push(f.ecdsa ? 'Its code <strong>contains ECDSA verification</strong> that we never saw used — for example a <code>permit</code> nobody called.' : 'We found no sign of pre-quantum cryptography in its activity or its code. Static checks can miss ECDSA used through libraries.');
+  }
+  return out.filter(Boolean);
+}
+
+const fmtEth = x => x >= 1000 ? fmtN(x) : x >= 0.01 ? x.toLocaleString(undefined, { maximumFractionDigits: 2 }) : x > 0 ? '<0.01' : '0';
+
+async function bsLabel(a) {
+  try {
+    const ctrl = new AbortController(), timer = setTimeout(() => ctrl.abort(), 5000);
+    const d = await (await fetch(`https://eth.blockscout.com/api/v2/addresses/${a}`, { signal: ctrl.signal })).json();
+    clearTimeout(timer);
+    return d?.name || d?.token?.name || d?.ens_domain_name || null;
+  } catch (e) { return null; }
+}
+
+function renderResult(a, meta, fams, rec, cur, live, tgtRec, label) {
+  const fam = rec && rec.f != null ? fams[rec.f] : null;
+  const u = rec?.u || {}, cats = Object.keys(u).sort((x, y) => (u[y][0] - u[x][0]) || (u[y][1] - u[x][1]));
+  const role = fam?.[0];
+  const name = cur?.protocol || rec?.n || label || (fam && (role === 'a' || role === 'w') ? fam[5] : null) ||
+    (live?.kind === 'eoa' && !rec ? 'Externally owned account' : live?.kind === 'eip7702' || role === 'd' ? 'Account with EIP-7702 code' : 'Unnamed contract');
+  const [col, title, sub] = verdict(meta, rec, fam, cur, live);
+  const first = cats.length ? Math.min(...cats.map(k => u[k][2])) : null, last = cats.length ? Math.max(...cats.map(k => u[k][3])) : null;
+
+  const roleTxt = cur ? (cur.is_account ? 'Contract wallet' : 'Application') : fam ? ROLE_L[role] : rec?.im ? 'Implementation contract' :
+    live ? ({ eoa: rec ? 'No code now' : 'EOA', eip7702: 'EOA with EIP-7702 code' }[live.kind] || 'Contract') : '…';
+  const codeTxt = cur ? (UPG[cur.upgradeability] || '—') : role === 'd' ? 'Its key can re-delegate' : fam ? MUT_L[fam[1]] :
+    live ? (PROXY_L[live.kind] ? (live.kind === 'eip1167' ? 'Clone, fixed code' : live.kind === 'eip7702' ? 'Delegated, can re-delegate' : 'Upgradeable proxy') : live.kind === 'none' ? 'No proxy detected' : '—') : '…';
+  const busy = rec?.t ? busierThan(meta, rec.t) : 0;
+  const val = rec?.v ? `≈${fmtUSD(rec.v[0])}<small>${rec.v[1] < 20 ? 'rough: ' : ''}from ${fmtN(rec.v[1])} sampled tx</small>` : '—';
+  const held = rec?.h ? `${fmtUSD(rec.h)}<small>ETH and tokens</small>` : live && !live.error ? `${fmtEth(live.eth)} ETH<small>tokens not measured</small>` : '—';
+  const facts = [
+    ['Role', roleTxt], ['Code', codeTxt],
+    ['Transactions, year to Mar 2026', rec?.t ? `${fmtN(rec.t)}${busy >= 50 ? `<small>busier than ${busy}% of callers</small>` : ''}` : (rec ? '0<small>not active in the year</small>' : '—')],
+    ['Value moved, same period', val],
+    ['First used', first ? fmtDate(meta, first) : '—'], ['Last used', last ? fmtDate(meta, last) : '—'],
+    ['Held now', held], ['Classification', cur ? `By hand<small>${esc(cur.confidence)} confidence</small>` : rec ? 'Automatic<small>from code family and proxy rules</small>' : '—'],
+  ];
+
+  let h = `<div class="r-head"><div><div class="r-name">${esc(name)}</div><div class="r-addr">${a}</div></div>
+    <div class="r-links"><a href="https://etherscan.io/address/${a}" target="_blank" rel="noopener">Etherscan ↗</a><button type="button" id="lkCopy">Copy link</button></div></div>
+    <div class="r-verdict" style="--c: var(${col === '--ink' ? '--ink' : col})"><div class="t">${title}</div><div class="s">${sub}</div></div>
+    <div class="r-facts">${facts.map(([k, v]) => `<div><div class="k">${k}</div><div class="v">${v}</div></div>`).join('')}</div>`;
+
+  if (cats.length) h += `<div class="r-sec"><h3>What it used</h3><table class="r-use"><thead><tr><th>Primitive</th><th>Transactions, year</th><th class="hide-sm">Calls, all time</th><th class="hide-sm">First used</th><th>Last used</th></tr></thead><tbody>` +
+    cats.map(k => `<tr><td>${CATINFO[k][0]}<span class="what">${CATINFO[k][1]}</span></td><td class="n">${fmtN(u[k][0])}</td><td class="n hide-sm">${fmtN(u[k][1])}</td><td class="n hide-sm">${fmtDate(meta, u[k][2])}</td><td class="n">${fmtDate(meta, u[k][3])}</td></tr>`).join('') +
+    `</tbody></table><p class="note">From a trace of every successful precompile call on mainnet. Calls made through a proxy count towards the proxy.</p></div>`;
+
+  if (cur) {
+    const rel = REL[cur.reliance] || ['—', '', '--muted'];
+    h += `<div class="r-sec"><h3>How it works</h3><dl class="r-dl">
+      <dt>What the cryptography is for</dt><dd>${esc(FUNC[cur.function] || cur.function)}</dd>
+      <dt>Who holds the key</dt><dd>${esc((SIGNER[cur.signer] || ['—'])[0])}</dd>
+      <dt>Alternative to the check</dt><dd><span class="dot" style="background:var(${rel[2]})"></span>${rel[0]}<span class="sub">${rel[1]}</span></dd>
+      ${cur.ecdsa_order && cur.ecdsa_order !== 'n/a' ? `<dt>How it checks signatures</dt><dd>${esc({ ecrecover_only: 'ECDSA only', ecrecover_first_then_1271: 'ECDSA first, then ERC-1271', signer_selects_scheme: 'Signer picks the scheme', code_check_first: 'Checks for account code first, then ERC-1271' }[cur.ecdsa_order] || cur.ecdsa_order)}</dd>` : ''}
+      <dt>Code</dt><dd>${esc(UPG[cur.upgradeability] || '—')}${cur.admin ? `<span class="sub">${esc(cur.admin)}</span>` : ''}</dd>
+      <dt>Evidence</dt><dd>${esc(cur.evidence)}</dd></dl></div>`;
+  }
+
+  if (rec?.im) h += `<div class="r-sec"><h3>Contracts running this code</h3><dl class="r-dl"><dt>Contracts</dt><dd>${fmtN(rec.im[1])} across ${fmtN(rec.im[0])} code famil${rec.im[0] === 1 ? 'y' : 'ies'}<span class="sub">${rec.im[3].map(r => ROLE_L[r]).join(', ')}</span></dd><dt>Pre-quantum transactions, year</dt><dd>${fmtN(rec.im[2])}</dd></dl></div>`;
+
+  h += `<div class="r-sec"><h3>Its code today</h3>`;
+  if (!live) h += `<p class="r-loading">Reading current code from the chain…</p>`;
+  else if (live.error) h += `<p class="note">Couldn't reach a public Ethereum RPC to read its current code (${esc(live.error)}).</p>`;
+  else {
+    const f = live.feat, rows = [], u = rec?.u || {};
+    const kindTxt = live.kind === 'eoa' ? 'No code — a regular account' : live.kind === 'eip7702' ? `Delegates to ${addrLink(live.target)}${role === 'd' && fam?.[5] ? ` (${esc(fam[5])})` : ''}${live.inner ? ` → ${addrLink(live.inner)}` : ''}` :
+      `${fmtN(live.size)} bytes${PROXY_L[live.kind] ? ` · ${PROXY_L[live.kind]} → ${addrLink(live.target || live.beacon)}` : ' · not a proxy'}`;
+    rows.push(['n', 'Code', kindTxt]);
+    if (live.admin) rows.push(['n', 'Proxy admin', addrLink(live.admin)]);
+    if (tgtRec?.im && live.kind !== 'eoa') {
+      const n = tgtRec.im[1], noun = live.kind === 'eip7702' ? 'account' : 'contract';
+      rows.push(['n', live.kind === 'eip7702' ? 'Accounts using this delegate' : 'Contracts running this code', `${fmtN(n)} ${noun}${n === 1 ? '' : 's'} · ${fmtN(tgtRec.im[2])} pre-quantum tx in the year`]);
+    }
+    if (live.kind !== 'eoa') {
+      rows.push(u.e ? ['y', 'ECDSA (ecrecover)', 'used — seen in the trace'] : [f.ecdsa ? 'y' : 'n', 'ECDSA verification code', f.ecdsa ? 'found' : 'not found']);
+      const curated1271 = cur && ['code_check_first', 'ecrecover_first_then_1271', 'signer_selects_scheme'].includes(cur.ecdsa_order);
+      if (curated1271 || u.e || f.ecdsa || f.erc1271)
+        rows.push(curated1271 ? ['g', 'ERC-1271 contract signatures', 'supported — from reading its code'] : [f.erc1271 ? 'g' : 'n', 'ERC-1271 contract signatures', f.erc1271 ? 'referenced' : 'not found']);
+      if (f.permit || f.auth3009) rows.push(['y', [f.permit && 'permit', f.auth3009 && 'transferWithAuthorization'].filter(Boolean).join(', '), 'signature-based approvals']);
+      const curves = [(f.bn254 || u.b || u.sb) && 'BN254', (f.p256 || u.p || u.sp) && 'P-256', (f.bls || u.l || u.sl) && 'BLS12-381', u.k && 'KZG'].filter(Boolean);
+      if (curves.length) rows.push(['y', 'Elliptic-curve constants', curves.join(', ')]);
+      if (f.lattice) rows.push(['g', 'Lattice (post-quantum) verifier tables', 'found']);
+      if (f.upgrade) rows.push(['n', 'Upgrade functions', 'present']);
+    }
+    rows.push(['n', 'ETH balance', `${fmtEth(live.eth)} ETH`]);
+    h += `<ul class="r-checks">${rows.map(([i, k, v]) => `<li><span class="i ${i}">${i === 'y' ? '●' : i === 'g' ? '✓' : '·'}</span><span>${k}</span><span class="d">${v}</span></li>`).join('')}</ul>` +
+      (live.kind !== 'eoa' ? `<p class="note">Static checks of the current code${live.target ? ' and its implementation' : ''}. They can miss ECDSA called through libraries, so treat "not found" as unknown.</p>` : '');
+  }
+  h += `</div>`;
+
+  const means = meanings(rec, fam, cur, live, live && !live.error ? live.feat : null);
+  if (means.length) h += `<div class="r-sec"><h3>What it means for post-quantum users</h3><ul class="r-means">${means.map(m => `<li>${m}</li>`).join('')}</ul></div>`;
+
+  const box = $('#result');
+  box.innerHTML = h;
+  box.querySelectorAll('[data-lookup]').forEach(el => el.onclick = () => openLookup(el.dataset.lookup));
+  const copy = $('#lkCopy');
+  if (copy) copy.onclick = () => { navigator.clipboard?.writeText(location.href); copy.textContent = 'Link copied'; };
+}
+
+async function openLookup(input, { push = true, scroll = true } = {}) {
+  let a = input.trim().toLowerCase();
+  if (!ADDR_RE.test(a)) return;
+  if (!a.startsWith('0x')) a = '0x' + a;
+  const token = ++LK.token, box = $('#result');
+  $('#lkInput').value = a;
+  $('#lkSuggest').hidden = true;
+  if (push && location.hash !== '#' + a) history.pushState(null, '', '#' + a);
+  box.hidden = false;
+  box.innerHTML = `<p class="r-loading">Looking up <span class="mono">${a}</span>…</p>`;
+  if (scroll) $('#check').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  const liveP = liveCheck(a).catch(e => ({ error: String(e.message || e) }));
+  const labelP = bsLabel(a);
+  const [meta, fams, rec, D] = await Promise.all([lkMeta(), lkFams(), lkRecord(a), dataP]);
+  if (token !== LK.token) return;
+  const cur = D.contracts.find(c => c.address === a) || null;
+  renderResult(a, meta, fams, rec, cur, null, null, null);
+  const [live, label] = await Promise.all([liveP, labelP]);
+  const tgt = live && !live.error ? (live.inner || live.target) : null;
+  const tgtRec = tgt ? await lkRecord(tgt) : null;
+  if (token !== LK.token) return;
+  renderResult(a, meta, fams, rec, cur, live, tgtRec, label);
+}
+
+(function initLookup() {
+  const EXAMPLES = [['Permit2', '0x000000000022d473030f116ddee9f6b43ac78ba3'], ['USDC', '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'],
+    ['DAI', '0x6b175474e89094c44da98b954eedeac495271d0f'], ['Wormhole', '0x98f3c9e6e3face36baad05fe09d375ef1464288b'],
+    ['Seaport', '0x0000000000000068f116a894984e2db1123eb395'], ['Lighter verifier', '0xac3ce44b6ff4e402858c99d5699ff63131572baa']];
+  $('#lkExamples').insertAdjacentHTML('beforeend', EXAMPLES.map(([n, a]) => `<button type="button" data-a="${a}">${n}</button>`).join(''));
+  $('#lkExamples').querySelectorAll('button').forEach(b => b.onclick = () => openLookup(b.dataset.a, { scroll: false }));
+  const input = $('#lkInput'), sug = $('#lkSuggest');
+  let matches = [], sel = 0;
+  const drawSug = () => {
+    sug.hidden = !matches.length;
+    sug.innerHTML = matches.map((c, i) => `<button type="button" class="${i === sel ? 'on' : ''}" data-a="${c.address}"><span>${esc(c.protocol)}</span><small>${esc(FUNC[c.function] || '')} · ${short(c.address)}</small></button>`).join('');
+    sug.querySelectorAll('button').forEach(b => b.onmousedown = e => { e.preventDefault(); openLookup(b.dataset.a, { scroll: false }); });
+  };
+  input.addEventListener('input', async () => {
+    const q = input.value.trim().toLowerCase();
+    if (!q || q.startsWith('0x') || ADDR_RE.test(q)) { matches = []; return drawSug(); }
+    const D = await dataP;
+    matches = D.contracts.filter(c => (c.protocol + ' ' + c.contract_name).toLowerCase().includes(q)).slice(0, 8);
+    sel = 0; drawSug();
+  });
+  input.addEventListener('keydown', e => {
+    if (sug.hidden) return;
+    if (e.key === 'ArrowDown') { sel = Math.min(sel + 1, matches.length - 1); drawSug(); e.preventDefault(); }
+    else if (e.key === 'ArrowUp') { sel = Math.max(sel - 1, 0); drawSug(); e.preventDefault(); }
+    else if (e.key === 'Escape') { sug.hidden = true; }
+  });
+  input.addEventListener('blur', () => setTimeout(() => { sug.hidden = true; }, 150));
+  $('#lkForm').onsubmit = e => {
+    e.preventDefault();
+    const v = input.value.trim();
+    if (ADDR_RE.test(v)) return openLookup(v, { scroll: false });
+    if (matches.length) return openLookup(matches[sel].address, { scroll: false });
+    const box = $('#result');
+    box.hidden = false;
+    box.innerHTML = `<p class="r-loading">Enter a 40-character hex address starting with 0x, or pick a protocol from the suggestions.</p>`;
+  };
+  const fromHash = () => { const h = location.hash.slice(1); if (ADDR_RE.test(h)) openLookup(h, { push: false, scroll: false }); };
+  window.addEventListener('hashchange', fromHash);
+  fromHash();
+})();
+
+// ======================= summary =======================
+dataP.then(D => {
   const any = D.t1_categories.find(r => r.cat === 'ANY pre-quantum');
   const oneIn = Math.round(D.chain_tx_estimate.est_total_txs / any.txs_y1);
 
@@ -515,7 +930,7 @@ fetch('data.json').then(r => r.json()).then(D => {
   $('#nAll').textContent = all.length;
   for (const [id, labels] of [['#fRel', Object.fromEntries(Object.entries(REL).map(([k, v]) => [k, v[0]]))], ['#fUpg', UPG]])
     Object.entries(labels).forEach(([k, v]) => $(id).insertAdjacentHTML('beforeend', `<option value="${k}">${v}</option>`));
-  let sortKey = 'usd_tx_y1', dir = -1, open = new Set(), showAll = false;
+  let sortKey = 'usd_tx_y1', dir = -1, showAll = false;
   const COLS = [['protocol', 'Contract'], ['reliance', 'Reliance'], ['upgradeability', 'Code', 'hide-sm'], ['txs_y1', 'Transactions', 'n hide-sm'], ['usd_tx_y1', 'Value / year', 'n'], ['usd_held_now', 'Held', 'n hide-sm']];
   function render() {
     const q = $('#q').value.trim().toLowerCase(), fr = $('#fRel').value, fu = $('#fUpg').value, fk = $('#fKind').value;
@@ -530,16 +945,9 @@ fetch('data.json').then(r => r.json()).then(D => {
       shown.map(r => { const rel = REL[r.reliance] || ['—', '', '--muted'];
         return `<tr class="r" data-a="${r.address}"><td><span class="p">${esc(r.protocol)}</span><span class="f">${esc(FUNC[r.function] || r.function)}${r.confidence === 'low' ? ' · low confidence' : ''}</span></td>
           <td><span class="dot" style="background:var(${rel[2]})"></span>${rel[0]}</td><td class="hide-sm">${UPG[r.upgradeability] || '—'}</td>
-          <td class="n hide-sm">${fmtN(r.txs_y1)}</td><td class="n">${fmtUSD(r.usd_tx_y1)}</td><td class="n hide-sm">${fmtUSD(r.usd_held_now)}</td></tr>` +
-          (open.has(r.address) ? `<tr class="d"><td colspan="${COLS.length}"><dl>
-            <dt>Address</dt><dd class="mono"><a href="https://etherscan.io/address/${r.address}">${r.address}</a></dd>
-            <dt>Contract</dt><dd>${esc(r.contract_name)}</dd>
-            <dt>Upgrades controlled by</dt><dd>${esc(r.admin) || '—'}</dd>
-            <dt>Post-quantum path</dt><dd>${esc(r.pq_replacement)}</dd>
-            <dt>Evidence</dt><dd>${esc(r.evidence)}</dd>
-            <dt>Crypto used</dt><dd class="mono">${esc(r.cats)}</dd></dl></td></tr>` : ''); }).join('') + '</tbody>';
+          <td class="n hide-sm">${fmtN(r.txs_y1)}</td><td class="n">${fmtUSD(r.usd_tx_y1)}</td><td class="n hide-sm">${fmtUSD(r.usd_held_now)}</td></tr>`; }).join('') + '</tbody>';
     $('#ext').querySelectorAll('th').forEach(th => th.onclick = () => { const k = th.dataset.k; dir = k === sortKey ? -dir : (['txs_y1', 'usd_tx_y1', 'usd_held_now'].includes(k) ? -1 : 1); sortKey = k; render(); });
-    $('#ext').querySelectorAll('tr.r').forEach(tr => tr.onclick = () => { const a = tr.dataset.a; open.has(a) ? open.delete(a) : open.add(a); render(); });
+    $('#ext').querySelectorAll('tr.r').forEach(tr => tr.onclick = () => openLookup(tr.dataset.a));
   }
   $('#q').oninput = render;
   ['#fRel', '#fUpg', '#fKind'].forEach(s => $(s).onchange = render);
