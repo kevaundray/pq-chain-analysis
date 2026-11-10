@@ -490,10 +490,18 @@ const getJSON = u => fetch(u).then(r => r.ok ? r.json() : null);
 const LK = { meta: null, fams: null, shards: new Map(), token: 0 };
 const lkMeta = () => (LK.meta ??= getJSON('lookup/meta.json'));
 const lkFams = () => (LK.fams ??= getJSON('lookup/families.json'));
+// shards: lookup/<(first 3 hex) >> 2>.json.gz, keyed by the first 16 hex chars (see scripts/11_lookup_index.py)
+async function getGzJSON(u) {
+  const r = await fetch(u);
+  if (!r.ok) return {};
+  const buf = new Uint8Array(await r.arrayBuffer());
+  if (buf[0] === 0x1f && buf[1] === 0x8b) return new Response(new Blob([buf]).stream().pipeThrough(new DecompressionStream('gzip'))).json();
+  return JSON.parse(new TextDecoder().decode(buf));  // already decoded in transit
+}
 function lkRecord(a) {
-  const s = a.slice(2, 5);
-  if (!LK.shards.has(s)) LK.shards.set(s, getJSON(`lookup/${s}.json`).then(d => d || {}));
-  return LK.shards.get(s).then(d => d[a.slice(5)] || null);
+  const s = (parseInt(a.slice(2, 5), 16) >> 2).toString(16).padStart(3, '0');
+  if (!LK.shards.has(s)) LK.shards.set(s, getGzJSON(`lookup/${s}.json.gz`));
+  return LK.shards.get(s).then(d => d[a.slice(2, 18)] || null);
 }
 function blockTime(meta, b) {
   const A = meta.anchors; let lo = 0, hi = A.length - 1;

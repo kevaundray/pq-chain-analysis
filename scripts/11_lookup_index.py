@@ -1,7 +1,11 @@
-"""Per-address lookup index for the site -> docs/lookup/<3 hex>.json (4096 shards), families.json, meta.json.
+"""Per-address lookup index for the site -> docs/lookup/<shard>.json.gz (1024 shards), families.json, meta.json.
 
 One record per address that ever made a pre-quantum precompile call (cat_all), plus records for the implementation
-contracts behind proxy / clone / 7702 families. Shard = first 3 hex chars after 0x; key = the remaining 37 hex chars.
+contracts behind proxy / clone / 7702 families.
+Shard = (first 3 hex chars after 0x) >> 2, as 3-digit hex. Key = first 16 hex chars after 0x (64 bits; a random
+address falsely matching a record in its shard has probability ~1e-13; collisions inside the data are checked).
+Shards are gzip files (GitHub Pages deploys time out on the uncompressed index); the page decompresses them with
+DecompressionStream.
 
 Record (keys omitted when empty):
   u   {cat: [txs_y1, calls_alltime, first_block, last_block]}   usage per category (codes in meta.cats)
@@ -18,6 +22,7 @@ families.json: [[role, mutability, proxy_kind, logic, members, label], ...]
 """
 
 import glob
+import gzip
 import json
 import os
 import shutil
@@ -36,6 +41,11 @@ CAT_CODE = {"ecrecover": "e", "bn254": "b", "kzg": "k", "bls12381": "l", "p256":
             "sw_secp256k1": "sk", "sw_bn254": "sb", "sw_ed25519": "se", "sw_bls12381": "sl", "rsa": "r"}
 ROLE_CODE = {"application": "a", "account_contract": "w", "account_7702_eoa": "d", "no_code_now": "n"}
 MUT_CODE = {"immutable": "i", "upgradeable": "u", "owner_controlled": "o", "proxy_unresolved": "x"}
+KEY_HEX = 16
+
+
+def shard_of(addr: str) -> str:
+    return f"{int(addr[2:5], 16) >> 2:03x}"
 
 
 def main():
@@ -138,11 +148,14 @@ def main():
     print("records", len(rec), flush=True)
     shards = defaultdict(dict)
     for a, r in rec.items():
-        shards[a[2:5]][a[5:]] = r
+        key = a[2:2 + KEY_HEX]
+        if key in shards[shard_of(a)]:
+            raise RuntimeError(f"{KEY_HEX}-hex key collision at {a}")
+        shards[shard_of(a)][key] = r
     shutil.rmtree(OUT, ignore_errors=True)
     os.makedirs(OUT)
     for k, d in shards.items():
-        with open(f"{OUT}/{k}.json", "w") as fh:
+        with gzip.open(f"{OUT}/{k}.json.gz", "wt", compresslevel=9) as fh:
             json.dump(d, fh, separators=(",", ":"))
 
     # block -> unix time anchors (min per 100k-block file of the precompile corpus)
